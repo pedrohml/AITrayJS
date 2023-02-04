@@ -16,7 +16,9 @@ export class OpenAIProvider implements IProvider {
             { id: 'text-davinci-003', name: 'Text Davinci' },
             { id: 'text-curie-001', name: 'Text Curie' },
             { id: 'text-babbage-001', name: 'Text Babbage' },
-            { id: 'text-ada-001', name: 'Text Ada' }
+            { id: 'text-ada-001', name: 'Text Ada' },
+            { id: 'code-davinci-002', name: 'Code Davinci' },
+            { id: 'code-cushman-001', name: 'Code Cushman' },
         ].map(m => new OpenAIModel(m.id, m.name));
         this.client = new OpenAIApi(new Configuration({apiKey: accessKey}));
     }

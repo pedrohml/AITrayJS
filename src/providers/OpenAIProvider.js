@@ -23,7 +23,9 @@ class OpenAIProvider {
             { id: 'text-davinci-003', name: 'Text Davinci' },
             { id: 'text-curie-001', name: 'Text Curie' },
             { id: 'text-babbage-001', name: 'Text Babbage' },
-            { id: 'text-ada-001', name: 'Text Ada' }
+            { id: 'text-ada-001', name: 'Text Ada' },
+            { id: 'code-davinci-002', name: 'Code Davinci' },
+            { id: 'code-cushman-001', name: 'Code Cushman' },
         ].map(m => new OpenAIModel_1.default(m.id, m.name));
         this.client = new openai_1.OpenAIApi(new openai_1.Configuration({ apiKey: accessKey }));
     }
