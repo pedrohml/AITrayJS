@@ -1,0 +1,18 @@
+{
+  "name": "aitray",
+  "version": "1.0.0",
+  "description": "An app to apply AI model over clipboard history",
+  "main": "main.js",
+  "author": "Pedro Lira",
+  "license": "MIT",
+  "dependencies": {
+    "electron": "^22.1.0",
+    "electron-settings": "^4.0.2",
+    "openai": "^3.1.0",
+    "typescript": "^4.9.4"
+  },
+  "scripts": {
+    "start": "electron src/main.js",
+    "build": "tsc"
+  }
+}

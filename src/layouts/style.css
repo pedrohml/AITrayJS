@@ -1,0 +1,199 @@
+@media (prefers-color-scheme: dark) {
+    body {
+        color: white;
+        background: #333;
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: small;
+        caret-color: white;
+    }
+
+    textarea, input[type=text], input:not([type]) {
+        color: white;
+        background: #222;
+        border: 1px solid gray;
+        min-height: 20px;
+        padding: 5px;
+    }
+
+    textarea:read-only {
+        background: #333;
+    }
+
+    input[type=checkbox] {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+        appearance: none;
+        width: 40px;
+        height: 20px;
+        background: #333;
+        border: 1px solid gray;
+        border-radius: 10px;
+        padding: 2px;
+    }
+
+    input[type=checkbox]:checked {
+        background: #555;
+    }
+
+    input[type=checkbox]:before {
+        display: block;
+        border: 1px solid gray;
+        border-radius: 5px;
+        width: 10px;
+        height: 10px;
+        background: white;
+        content: "";
+        align-self: flex-start;
+    }
+    
+    input[type=checkbox]:checked:before {
+        align-self: flex-end;
+    }
+
+    input[type=checkbox] ~ label {
+        align-self: center;
+    }
+
+    select, button {
+        color: white;
+        background: #444;
+        border: 1px solid gray;
+    }
+
+    button {
+        padding: 10px;
+    }
+
+    select {
+        padding: 5px;
+    }
+    
+    select:hover, button:hover {
+        background: #555;
+    }
+
+    select:disabled, button:disabled {
+        color: lightgray;
+        background: #333;
+    }
+    
+    select:active, button:active {
+        background: #222;
+    }
+
+    select:disabled:active, button:disabled:active {
+        background: #333 !important; 
+    }
+}
+
+.loading-overlay {
+    position: absolute;
+    display: flex;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: 100%;
+    background: black;
+    opacity: .5;
+    transition: opacity 1s;
+}
+
+.loading-overlay[hidden] {
+    z-index: -999;
+    opacity: 0;
+    transition: opacity 1s;
+}
+
+.loading-overlay:not([hidden]) {
+    opacity: .5;
+    z-index: 999;
+    transition: opacity 1s;
+}
+
+.loading-overlay:before {
+    content: "";
+    margin: auto;
+    width: 128px;
+    height: 128px;
+    background-image: url('../../public/images/loading.gif');
+    background-size: contain;
+}
+
+fieldset {
+    display: flex;
+    flex-direction: column;
+    border: 0px;
+}
+
+button {
+    margin: 5px;
+}
+
+.hstack {
+    display: flex;
+    flex-direction: row;
+}
+
+.hstack.evenly {
+    justify-content: space-evenly;
+}
+
+.hstack.strech-all > * {
+    flex-grow: 1;
+}
+
+.vstack {
+    display: flex;
+    flex-direction: column;
+}
+
+.field {
+    display: flex;
+}
+
+.field label {
+    width: 45px;
+}
+
+.field label.medium {
+    width: 90px;
+}
+
+.field label.large {
+    width: 120px;
+}
+
+.field > input[type=checkbox] {
+    align-self: center;
+}
+
+.auto-width {
+    width: auto !important;
+}
+
+.field > * {
+    position: relative;
+    resize: none;
+    margin: 5px;
+}
+
+.field :nth-child(2) {
+    flex-grow: 1;
+}
+
+.field.horizontal {
+    flex-direction: row;
+    align-items: center;
+}
+
+.field.vertical {
+    flex-direction: column;
+}
+
+.button-panel {
+    display: flex;
+    flex-direction: row;
+    margin-top: 10px;
+    justify-content: flex-end;
+}

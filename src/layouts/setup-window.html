@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <!-- <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'"> -->
+  <link rel="stylesheet" href="./style.css">
+  <title>AI Tray Setup</title>
+</head>
+<body>
+  <div id="app">
+    <form id="form" @submit.prevent="submitForm">
+      <fieldset>
+        <p><b>Providers</b></p>
+        <div class="field horizontal">
+          <label for="openai-access-key" class="large">OpenAI Access Key:</label>
+          <input id="openai-access-key" ref="openaiAccessKey" type="text" v-model="openaiAccessKey"/>
+        </div>
+        <p><b>Macros</b></p>
+        <div class="hstack evenly">
+          <button type="button" v-for="(macro, idx) in macros" :key="idx" @click="openMacro(idx)">Macro {{idx + 1}}</button>
+        </div>
+      </fieldset>
+    </form>
+  </div>
+</body>
+<script src="../../public/js/vue.prod.js"></script>
+<script>
+  var exports = {};
+  var module = {};
+</script>
+<script src="../ui-controls/SetupWindowPostload.js"></script>
+</html>

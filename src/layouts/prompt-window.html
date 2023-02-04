@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <!-- <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'"> -->
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+  <div id="app">
+    <div id="loading-overlay" ref="loadingOverlay" class="loading-overlay" hidden></div>
+    <form id="form" @submit.prevent="submitForm">
+      <fieldset>
+        <div class="hstack">
+          <div class="field horizontal">
+            <label for="provider">Pro<u>v</u>ider</label>
+            <select id="provider" ref="provider" accesskey="v" v-model="providerId">
+              <option class="ai-provider" v-for="(provider, providerId) in providers" :key="providerId" :value="providerId">
+                {{ provider.name || providerId }}
+              </option>
+            </select>
+          </div>
+          <div class="field horizontal">
+            <label class="auto-width" for="model"><u>M</u>odel</label>
+            <select id="model" ref="model" accesskey="m" v-model="modelId">
+              <option v-for="model in providers[providerId] && providers[providerId].models" :key="model.id" :value="model.id">{{ model.name || model.id || model }}</option>
+            </select>
+          </div>
+        </div>
+        <div class="field horizontal">
+          <label for="prompt"><u>P</u>rompt</label>
+          <input id="prompt" ref="prompt" type="text" accesskey="p" v-model="prompt"/>
+        </div>
+        <div class="hstack strech-all">
+          <div class="field vertical">
+            <label for="context">Conte<u>x</u>t</label>
+            <textarea id="context" ref="context" accesskey="x" rows="10" v-model="context" :disabled="!!clipboardAutoMode"></textarea>
+          </div>
+          <div class="field vertical">
+            <label for="result"><u>R</u>esult</label>
+            <textarea id="result" ref="result" accesskey="r" v-model="result" readonly rows="10" @focus="$event.target.select()"></textarea>
+          </div>
+        </div>
+        <div class="button-panel">
+          <div class="field horizontal">
+            <input id="clipboard" ref="clipboard" type="checkbox" accesskey="b" v-model="clipboardAutoMode" @change="clipboardChanged()">
+            <label class="medium" for="clipboard">Use clip<u>b</u>oard</label>
+          </div>
+          <div class="field horizontal">
+            <input id="alwaysOnTop" ref="alwaysOnTop" type="checkbox" accesskey="w" v-model="isAlwaysOnTop">
+            <label class="medium" for="alwaysOnTop">Al<u>w</u>ays on top</label>
+          </div>
+          <button id="cancel" type="button" title="(Esc)" @click="closeWindow()">Cancel</button>
+          <button id="clear" type="button" accesskey="c" @click="clearForm()"><u>C</u>lear</button>
+          <button id="submit" type="submit" accesskey="s" title="(CTRL+Enter)" :disabled="!prompt"><u>S</u>end</button>
+        </div>
+      </fieldset>
+    </form>
+  </div>
+</body>
+<script src="../../public/js/vue.prod.js"></script>
+<script>
+  var exports = {};
+  var module = {};
+</script>
+<script src="../Watcher.js"></script>
+<script src="../ui-controls/PromptWindowPostload.js"></script>
+</html>
