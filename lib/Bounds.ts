@@ -1,4 +1,3 @@
-
 export class Bounds {
     public x: number;
     public y: number;
@@ -13,7 +12,7 @@ export class Bounds {
         this.height = obj.height || 0;
     }
 
-    public interseect(otherBounds: Bounds) {
+    public interseect(otherBounds: Bounds) : Bounds {
         let left = Math.max(this.x, otherBounds.x);
         let right = Math.min(this.x + this.width, otherBounds.x + otherBounds.width);
         let top = Math.max(this.y, otherBounds.y);
