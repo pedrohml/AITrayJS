@@ -52,12 +52,10 @@ export class UserData {
         const settingsObject = await settings.get('aitray') as object;
         const userData = UserData.fromObject(settingsObject);
         try {
-            userData.openaiAccessKey = safeStorage.decryptString(new Buffer(userData.openaiAccessKey, 'base64'));
+            const encodedAccessKey = Buffer.from(userData.openaiAccessKey, 'base64');
+            userData.openaiAccessKey = safeStorage.decryptString(encodedAccessKey);
         } catch (err) {
             console.error(err);
-            userData.openaiAccessKey = '';
-        } finally {
-            // TODO: catch errors
             userData.openaiAccessKey = '';
         }
         userData.loadProviders();
@@ -66,7 +64,9 @@ export class UserData {
 
     public async save() : Promise<void> {
         const userData = new UserData(this); // without providers
-        userData.openaiAccessKey = safeStorage.encryptString(userData.openaiAccessKey).toString('base64');
+        const buffer = safeStorage.encryptString(userData.openaiAccessKey);
+        const decodedAccessKey = buffer.toString('base64');
+        userData.openaiAccessKey = decodedAccessKey;
         await settings.set('aitray', JSON.parse(JSON.stringify(userData)));
     }
 

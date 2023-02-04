@@ -48,14 +48,11 @@ class UserData {
             const settingsObject = yield electron_settings_1.default.get('aitray');
             const userData = UserData.fromObject(settingsObject);
             try {
-                userData.openaiAccessKey = electron_1.safeStorage.decryptString(new Buffer(userData.openaiAccessKey, 'base64'));
+                const encodedAccessKey = Buffer.from(userData.openaiAccessKey, 'base64');
+                userData.openaiAccessKey = electron_1.safeStorage.decryptString(encodedAccessKey);
             }
             catch (err) {
                 console.error(err);
-                userData.openaiAccessKey = '';
-            }
-            finally {
-                // TODO: catch errors
                 userData.openaiAccessKey = '';
             }
             userData.loadProviders();
@@ -65,7 +62,9 @@ class UserData {
     save() {
         return __awaiter(this, void 0, void 0, function* () {
             const userData = new UserData(this); // without providers
-            userData.openaiAccessKey = electron_1.safeStorage.encryptString(userData.openaiAccessKey).toString('base64');
+            const buffer = electron_1.safeStorage.encryptString(userData.openaiAccessKey);
+            const decodedAccessKey = buffer.toString('base64');
+            userData.openaiAccessKey = decodedAccessKey;
             yield electron_settings_1.default.set('aitray', JSON.parse(JSON.stringify(userData)));
         });
     }
