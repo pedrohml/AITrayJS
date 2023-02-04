@@ -12,28 +12,41 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.UserData = exports.PromptWindowPrefs = void 0;
+exports.UserData = exports.PromptWindowPrefs = exports.Bounds = void 0;
 const OpenAIProvider_1 = __importDefault(require("./providers/OpenAIProvider"));
 const electron_settings_1 = __importDefault(require("electron-settings"));
 const electron_1 = require("electron");
-class PromptWindowPrefs {
-    constructor() {
-        this.x = null;
-        this.y = null;
-        this.providerId = "";
-        this.modelId = "";
-        this.prompt = "";
-        this.context = "";
-        this.result = "";
-        this.clipboardAutoMode = false;
-        this.isAlwaysOnTop = false;
-        this.hideOnClose = false;
+class Bounds {
+    constructor(obj) {
+        obj || (obj = {});
+        this.x || (this.x = obj.x);
+        this.y || (this.y = obj.y);
+        this.width || (this.width = obj.width);
+        this.height || (this.height = obj.height);
+    }
+}
+exports.Bounds = Bounds;
+class PromptWindowPrefs extends Bounds {
+    constructor(obj) {
+        obj || (obj = {});
+        super(obj);
+        this.providerId = obj.providerId || "";
+        this.modelId = obj.modelId || "";
+        this.prompt = obj.prompt || "";
+        this.context = obj.context || "";
+        this.result = obj.result || "";
+        this.clipboardAutoMode = obj.clipboardAutoMode || false;
+        this.isAlwaysOnTop = obj.isAlwaysOnTop || false;
+        this.hideOnClose = obj.hideOnClose || false;
+    }
+    getBounds() {
+        return new Bounds(this);
     }
 }
 exports.PromptWindowPrefs = PromptWindowPrefs;
 class UserData {
     constructor(override) {
-        this.mainPromptWindowPrefs = (override === null || override === void 0 ? void 0 : override.mainPromptWindowPrefs) || new PromptWindowPrefs();
+        this.mainPromptWindowPrefs = new PromptWindowPrefs(override === null || override === void 0 ? void 0 : override.mainPromptWindowPrefs) || new PromptWindowPrefs();
         this.openaiAccessKey = (override === null || override === void 0 ? void 0 : override.openaiAccessKey) || '';
         this.macros = (override === null || override === void 0 ? void 0 : override.macros) || [
             {}, {}, {}

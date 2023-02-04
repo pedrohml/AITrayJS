@@ -13,22 +13,26 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const electron_1 = require("electron");
+const UserData_1 = require("../UserData");
 const path_1 = __importDefault(require("path"));
 class PromptWindow extends electron_1.BrowserWindow {
     constructor(providers, prefs, opts, shouldExecuteOnStartup) {
+        const defaultWidth = 740, defautHeight = 380;
         super(Object.assign({
             // TODO: Issue when change display settings. Window can be lost
             // x: prefs.x,
             // y: prefs.y,
-            width: 650,
-            height: 400,
+            minWidth: defaultWidth,
+            minHeight: defautHeight,
+            width: prefs.width || defaultWidth,
+            height: prefs.height || defautHeight,
             webPreferences: {
                 preload: path_1.default.join(__dirname, '../../src/ui-controls/PromptWindowPreload.js')
             },
             title: 'AI Prompt',
-            resizable: false
+            // resizable: false
         }, opts));
-        this.prefs = prefs;
+        this.prefs = new UserData_1.PromptWindowPrefs(prefs);
         this.providers = providers;
         shouldExecuteOnStartup || (shouldExecuteOnStartup = false);
         this.setMenuBarVisibility(false);
@@ -38,6 +42,16 @@ class PromptWindow extends electron_1.BrowserWindow {
                 event.preventDefault();
                 this.hide();
             }
+        });
+        this.on('resized', () => {
+            const bounds = this.getBounds();
+            this.prefs.width = bounds.width;
+            this.prefs.height = bounds.height;
+        });
+        this.on('moved', () => {
+            const bounds = this.getBounds();
+            this.prefs.x = bounds.x;
+            this.prefs.y = bounds.y;
         });
         this.webContents.ipc.handle("prompt-form-submit", (event, data) => __awaiter(this, void 0, void 0, function* () {
             return yield this.submitForm(data);
@@ -52,15 +66,18 @@ class PromptWindow extends electron_1.BrowserWindow {
             evt.returnValue = JSON.stringify(providers);
         });
         this.webContents.ipc.on('get-preferences', (evt) => {
-            evt.returnValue = JSON.stringify(this.prefs || {});
+            evt.returnValue = JSON.stringify(this.prefs);
         });
         this.webContents.ipc.on('set-preferences', (evt, prefs) => {
-            this.prefs = JSON.parse(prefs);
-            this.onSavePreferences && this.onSavePreferences(this.prefs);
+            this.setPreferences(new UserData_1.PromptWindowPrefs(JSON.parse(prefs)));
         });
         this.webContents.ipc.on('should-execute-on-startup', (evt) => {
             evt.returnValue = shouldExecuteOnStartup;
         });
+    }
+    setPreferences(preferences) {
+        this.prefs = new UserData_1.PromptWindowPrefs(Object.assign(Object.assign({}, preferences), this.getBounds()));
+        this.onSavePreferences && this.onSavePreferences(this.prefs);
     }
     submitForm(data) {
         var _a;
@@ -68,7 +85,6 @@ class PromptWindow extends electron_1.BrowserWindow {
             data || (data = this.prefs);
             const provider = (_a = this.providers) === null || _a === void 0 ? void 0 : _a.filter(p => p.id === data.providerId)[0];
             const model = provider === null || provider === void 0 ? void 0 : provider.models.filter(m => m.id === data.modelId)[0];
-            // console.log(this.providers, provider, model);
             if (provider && model) {
                 try {
                     return yield provider.request(model, data.prompt, data.context);

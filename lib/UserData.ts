@@ -3,9 +3,22 @@ import OpenAIProvider from "./providers/OpenAIProvider";
 import settings from 'electron-settings';
 import { safeStorage } from "electron";
 
-export class PromptWindowPrefs {
-    public x: number | null;
-    public y: number | null;
+export class Bounds {
+    public x?: number;
+    public y?: number;
+    public width?: number;
+    public height?: number;
+
+    constructor(obj?:any) {
+        obj ||= {};
+        this.x ||= obj.x;
+        this.y ||= obj.y;
+        this.width ||= obj.width;
+        this.height ||= obj.height;
+    }
+}
+
+export class PromptWindowPrefs extends Bounds {
     public providerId: string;
     public modelId: string;
     public prompt: string;
@@ -15,17 +28,21 @@ export class PromptWindowPrefs {
     public isAlwaysOnTop: boolean;
     public hideOnClose: boolean;
 
-    constructor() {
-        this.x = null;
-        this.y = null;
-        this.providerId = "";
-        this.modelId = "";
-        this.prompt = "";
-        this.context = "";
-        this.result = "";
-        this.clipboardAutoMode = false;
-        this.isAlwaysOnTop = false;
-        this.hideOnClose = false;
+    constructor(obj?: any) {
+        obj ||= {};
+        super(obj);
+        this.providerId = obj.providerId || "";
+        this.modelId = obj.modelId || "";
+        this.prompt = obj.prompt || "";
+        this.context = obj.context || "";
+        this.result = obj.result || "";
+        this.clipboardAutoMode = obj.clipboardAutoMode || false;
+        this.isAlwaysOnTop = obj.isAlwaysOnTop || false;
+        this.hideOnClose = obj.hideOnClose || false;
+    }
+
+    public getBounds(): Bounds {
+        return new Bounds(this);
     }
 }
 
@@ -36,7 +53,7 @@ export class UserData {
     public macros: PromptWindowPrefs[];
 
     constructor(override?: UserData) {
-        this.mainPromptWindowPrefs = override?.mainPromptWindowPrefs || new PromptWindowPrefs();
+        this.mainPromptWindowPrefs = new PromptWindowPrefs(override?.mainPromptWindowPrefs || {});
         this.openaiAccessKey = override?.openaiAccessKey || '';
         this.macros = override?.macros || [
                 {}, {}, {}

@@ -61,7 +61,6 @@ const vueApp = new Vue({
       PromptWindowBridge.setAlwaysOnTop(!!this.isAlwaysOnTop);
       PromptWindowBridge.setPreferences(currentPrefs);
       this.previousPrefs = currentPrefs;
-      console.log('saving prefs...');
     }
   },
   methods: {

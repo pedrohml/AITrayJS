@@ -1,5 +1,5 @@
 import { BrowserWindow } from "electron";
-import { UserData } from "../UserData";
+import { PromptWindowPrefs, UserData } from "../UserData";
 import settings from 'electron-settings';
 import path from "path";
 import PromptWindow from "./PromptWindow";
@@ -39,11 +39,13 @@ class SetupWindow extends BrowserWindow {
     
         const promptWindow = new PromptWindow(
             userData.providers!,
-            userData.macros[macroIdx],
+            new PromptWindowPrefs({ ...userData.macros[macroIdx], ...userData.mainPromptWindowPrefs.getBounds() }),
             { show: true, modal: true, parent: this, title: `AI Prompt (Macro ${macroIdx})` });
     
         promptWindow.onSavePreferences = async (prefs) => {
             const userData = await UserData.load();
+            const bounds = promptWindow.getBounds();
+            userData.mainPromptWindowPrefs = new PromptWindowPrefs({ ...userData.mainPromptWindowPrefs, ...bounds });
             userData.macros[macroIdx] = prefs;
             await userData.save();
         };

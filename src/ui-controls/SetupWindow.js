@@ -44,9 +44,11 @@ class SetupWindow extends electron_1.BrowserWindow {
     configMacro(macroIdx) {
         return __awaiter(this, void 0, void 0, function* () {
             const userData = yield UserData_1.UserData.load();
-            const promptWindow = new PromptWindow_1.default(userData.providers, userData.macros[macroIdx], { show: true, modal: true, parent: this, title: `AI Prompt (Macro ${macroIdx})` });
+            const promptWindow = new PromptWindow_1.default(userData.providers, new UserData_1.PromptWindowPrefs(Object.assign(Object.assign({}, userData.macros[macroIdx]), userData.mainPromptWindowPrefs.getBounds())), { show: true, modal: true, parent: this, title: `AI Prompt (Macro ${macroIdx})` });
             promptWindow.onSavePreferences = (prefs) => __awaiter(this, void 0, void 0, function* () {
                 const userData = yield UserData_1.UserData.load();
+                const bounds = promptWindow.getBounds();
+                userData.mainPromptWindowPrefs = new UserData_1.PromptWindowPrefs(Object.assign(Object.assign({}, userData.mainPromptWindowPrefs), bounds));
                 userData.macros[macroIdx] = prefs;
                 yield userData.save();
             });

@@ -2,19 +2,9 @@ const { app, ipcMain, clipboard, globalShortcut, Menu, Tray } = require('electro
 const path = require('path');
 const PromptWindow = require('./ui-controls/PromptWindow');
 const SetupWindow = require('./ui-controls/SetupWindow');
-const { UserData } = require('./UserData');
+const { UserData, PromptWindowPrefs } = require('./UserData');
 
 const appState = { macros: [] };
-
-async function savePromptWindowPrefs(promptWindow) {
-    if (promptWindow.isVisible()) {
-        const userData = await UserData.load();
-        const promptWindowBounds = promptWindow.getBounds();
-        userData.mainPromptWindowPrefs.x = promptWindowBounds.x;
-        userData.mainPromptWindowPrefs.y = promptWindowBounds.y;
-        await userData.save();
-    }
-}
 
 async function openSetupWindow() {
     const userData = await UserData.load();
@@ -31,7 +21,7 @@ const createMainPromptWindow = async (userData) => {
         { show: false });
 
     promptWindow.on('close', async (event) => {
-        await savePromptWindowPrefs(promptWindow);
+        promptWindow.setPreferences(promptWindow.prefs);
     });
 
     promptWindow.onSavePreferences = async (prefs) => {
@@ -55,12 +45,13 @@ const executeMacro = async (macroIdx) => {
 
     const promptWindow = new PromptWindow(
         userData.providers,
-        userData.macros[macroIdx],
+        { ...userData.macros[macroIdx], ...userData.mainPromptWindowPrefs.getBounds() },
         { show: true, title: `AI Prompt (Macro ${macroIdx})` },
         true);
 
     promptWindow.onSavePreferences = async (prefs) => {
         const userData = await UserData.load();
+        userData.mainPromptWindowPrefs = new PromptWindowPrefs({ ...userData.mainPromptWindowPrefs, ...prefs.getBounds() });
         userData.macros[macroIdx] = prefs;
         await userData.save();
     };
@@ -126,9 +117,7 @@ app.whenReady().then(async () => {
         // if (BrowserWindow.getAllWindows().length === 0) createWindow()
     })
 
-    app.on('before-quit', async (evt) => {
-        await savePromptWindowPrefs(promptWindow);
-    });
+    app.on('before-quit', async (evt) => {});
 });
 
 // Quit when all windows are closed, except on macOS. There, it's common
