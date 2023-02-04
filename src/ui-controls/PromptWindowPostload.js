@@ -59,9 +59,13 @@ const vueApp = new Vue({
       this.submitForm();
   },
   updated() {
-    PromptWindowBridge.setAlwaysOnTop(!!this.isAlwaysOnTop);
-    const prefs = JSON.parse(JSON.stringify(this.$data));
-    PromptWindowBridge.setPreferences(prefs);
+    const currentPrefs = JSON.parse(JSON.stringify(this.$data));
+    if (!this.comparePrefs(this.previousPrefs, currentPrefs)) {
+      PromptWindowBridge.setAlwaysOnTop(!!this.isAlwaysOnTop);
+      PromptWindowBridge.setPreferences(currentPrefs);
+      this.previousPrefs = currentPrefs;
+      console.log('saving prefs...');
+    }
   },
   methods: {
     async submitForm() {
@@ -82,6 +86,17 @@ const vueApp = new Vue({
         this.context = PromptWindowBridge.readFromClipboard();
       else
         this.context = '';
+    },
+    comparePrefs(prevPrefs, newPrefs) {
+      if (this.clipboardAutoMode) {
+        prevPrefs = {...prevPrefs, ...{ context: null }};
+        newPrefs = {...newPrefs, ...{ context: null }};
+      }
+
+      prevPrefs = JSON.stringify(prevPrefs);
+      newPrefs = JSON.stringify(newPrefs);
+
+      return prevPrefs === newPrefs;
     }
   }
 });
