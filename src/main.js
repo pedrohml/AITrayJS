@@ -1,6 +1,5 @@
 const { app, ipcMain, clipboard, globalShortcut, Menu, Tray } = require('electron');
 const path = require('path');
-const settings = require('electron-settings');
 const PromptWindow = require('./ui-controls/PromptWindow');
 const SetupWindow = require('./ui-controls/SetupWindow');
 const { UserData } = require('./UserData');
@@ -128,7 +127,7 @@ app.whenReady().then(async () => {
     })
 
     app.on('before-quit', async (evt) => {
-        await savePromptWindowPrefs(promptWindow, settings, userData);
+        await savePromptWindowPrefs(promptWindow);
     });
 });
 

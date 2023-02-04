@@ -1,14 +1,11 @@
 const vueApp = new Vue({
   el: '#app',
   data() {
-    // const userData = PromptWindowBridge.readUserDataSync();
     const providers = PromptWindowBridge.getProviders();
     const preferences = PromptWindowBridge.getPreferences();
     const providersMap = Object.fromEntries(providers.map(p => [p.id, p]));
     const clipboardAutoMode = preferences.clipboardAutoMode || false;
     const isAlwaysOnTop = preferences.isAlwaysOnTop || false;
-
-    // console.log([preferences]);
 
     if (clipboardAutoMode) {
       delete preferences.context;
