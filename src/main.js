@@ -77,7 +77,7 @@ const executeMacro = async (macroIdx) => {
 app.whenReady().then(async () => {
     const userData = await UserData.load();
     const promptWindow = await createMainPromptWindow(userData);
-    const tray = new Tray(path.join(__dirname, '../public/images/logo.ico'));
+    const tray = new Tray(path.join(__dirname, process.platform === 'win32' ? '../public/images/logo.ico' : '../public/images/logo.png'));
     const contextMenu = Menu.buildFromTemplate([
         { label: 'Prompt', accelerator: 'CTRL+ALT+P', registerAccelerator: false, click: () => { promptWindow.show(); } },
         { type: 'separator' },
