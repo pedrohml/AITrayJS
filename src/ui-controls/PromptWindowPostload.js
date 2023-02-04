@@ -27,7 +27,7 @@ const vueApp = new Vue({
       providers: providersMap,
       providerId: 'openai',
       modelId: 'text-davinci-003',
-      context: clipboardAutoMode ? PromptWindowBridge.readFromClipboard() : '',
+      context: clipboardAutoMode ? this.readFromClipboard() : '',
       prompt: '',
       result: '',
       clipboardAutoMode: clipboardAutoMode,
@@ -40,7 +40,7 @@ const vueApp = new Vue({
       250,
       () => {
         if (app.clipboardAutoMode) {
-          app.context = PromptWindowBridge.readFromClipboard();
+          app.context = this.readFromClipboard();
           if (PromptWindowBridge.isWindowVisible() && app.context !== this.previousClipboard) {
             PromptWindowBridge.focusWindow();
           }
@@ -76,6 +76,10 @@ const vueApp = new Vue({
           this.$refs.loadingOverlay.setAttribute("hidden", true);
         }
       },
+      readFromClipboard() {
+        return (PromptWindowBridge.readFromClipboard() || '').trim();
+
+      },
       clearForm() {
         this.context = this.clipboardAutoMode ? this.context : '';
         this.prompt = '';
@@ -86,7 +90,7 @@ const vueApp = new Vue({
       },
       clipboardChanged() {
         if (this.clipboardAutoMode)
-          this.context = PromptWindowBridge.readFromClipboard();
+          this.context = this.readFromClipboard();
         else
           this.context = '';
       },
