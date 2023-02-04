@@ -70,9 +70,11 @@ const vueApp = new Vue({
     },
     methods: {
       async submitForm() {
-        this.$refs.loadingOverlay.removeAttribute("hidden");
-        this.result = await PromptWindowBridge.submitForm(JSON.parse(JSON.stringify(this.$data)));
-        this.$refs.loadingOverlay.setAttribute("hidden", true);
+        if (this.prompt) {
+          this.$refs.loadingOverlay.removeAttribute("hidden");
+          this.result = await PromptWindowBridge.submitForm(JSON.parse(JSON.stringify(this.$data)));
+          this.$refs.loadingOverlay.setAttribute("hidden", true);
+        }
       },
       clearForm() {
         this.context = this.clipboardAutoMode ? this.context : '';
