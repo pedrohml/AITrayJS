@@ -1,5 +1,6 @@
-import { BrowserWindow, BrowserWindowConstructorOptions } from "electron";
-import { Bounds, PromptWindowPrefs } from "../UserData";
+import { BrowserWindow, BrowserWindowConstructorOptions, screen } from "electron";
+import { PromptWindowPrefs } from "../UserData";
+import { Bounds } from "../Bounds";
 import path from "path";
 import IProvider from "providers/IProvider";
 
@@ -9,21 +10,26 @@ class PromptWindow extends BrowserWindow {
     public onSavePreferences?: (prefs: PromptWindowPrefs) => void | Promise<void>;
 
     constructor(providers: IProvider[], prefs: PromptWindowPrefs, opts: BrowserWindowConstructorOptions, shouldExecuteOnStartup?: boolean) {
-        const defaultWidth = 740, defautHeight = 380;
+        const minWidth = 740;
+        const maxHeight = 380;
+        const actualWidth = Math.max(prefs.width || 0, minWidth);
+        const actualHeight = Math.max(prefs.height || 0, maxHeight);
+
         super(Object.assign({
-            // TODO: Issue when change display settings. Window can be lost
-            // x: prefs.x,
-            // y: prefs.y,
-            minWidth: defaultWidth,
-            minHeight: defautHeight,
-            width: prefs.width || defaultWidth,
-            height: prefs.height || defautHeight,
+            x: prefs.x || null,
+            y: prefs.y || null,
+            minWidth: minWidth,
+            minHeight: maxHeight,
+            width: actualWidth,
+            height: actualHeight,
             webPreferences: {
                 preload: path.join(__dirname, '../../src/ui-controls/PromptWindowPreload.js')
             },
             title: 'AI Prompt',
             // resizable: false
         }, opts));
+
+        this.adjustBounds();
 
         this.prefs = new PromptWindowPrefs(prefs);
         this.providers = providers;
@@ -80,6 +86,23 @@ class PromptWindow extends BrowserWindow {
         this.webContents.ipc.on('should-execute-on-startup', (evt) => {
             evt.returnValue = shouldExecuteOnStartup;
         });
+    }
+
+    private adjustBounds() {
+        const bounds = new Bounds(this.getBounds());
+        const display = screen.getDisplayMatching(bounds);
+        const displayBounds = new Bounds(display.workArea);
+        const intersection = bounds.interseect(displayBounds);
+
+        if (intersection.width == 0 && intersection.height == 0) {
+            const newBounds = {
+                x: (displayBounds.width - bounds.width) / 2,
+                y: (displayBounds.height - bounds.height) / 2,
+                width: bounds.width,
+                height: bounds.height
+            };
+            this.setBounds(newBounds);
+        }
     }
 
     public setPreferences(preferences: PromptWindowPrefs) {

@@ -12,21 +12,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.UserData = exports.PromptWindowPrefs = exports.Bounds = void 0;
+exports.UserData = exports.PromptWindowPrefs = void 0;
 const OpenAIProvider_1 = __importDefault(require("./providers/OpenAIProvider"));
 const electron_settings_1 = __importDefault(require("electron-settings"));
 const electron_1 = require("electron");
-class Bounds {
-    constructor(obj) {
-        obj || (obj = {});
-        this.x || (this.x = obj.x);
-        this.y || (this.y = obj.y);
-        this.width || (this.width = obj.width);
-        this.height || (this.height = obj.height);
-    }
-}
-exports.Bounds = Bounds;
-class PromptWindowPrefs extends Bounds {
+const Bounds_1 = require("./Bounds");
+class PromptWindowPrefs extends Bounds_1.Bounds {
     constructor(obj) {
         obj || (obj = {});
         super(obj);
@@ -40,13 +31,13 @@ class PromptWindowPrefs extends Bounds {
         this.hideOnClose = obj.hideOnClose || false;
     }
     getBounds() {
-        return new Bounds(this);
+        return new Bounds_1.Bounds(this);
     }
 }
 exports.PromptWindowPrefs = PromptWindowPrefs;
 class UserData {
     constructor(override) {
-        this.mainPromptWindowPrefs = new PromptWindowPrefs(override === null || override === void 0 ? void 0 : override.mainPromptWindowPrefs) || new PromptWindowPrefs();
+        this.mainPromptWindowPrefs = new PromptWindowPrefs((override === null || override === void 0 ? void 0 : override.mainPromptWindowPrefs) || {});
         this.openaiAccessKey = (override === null || override === void 0 ? void 0 : override.openaiAccessKey) || '';
         this.macros = (override === null || override === void 0 ? void 0 : override.macros) || [
             {}, {}, {}

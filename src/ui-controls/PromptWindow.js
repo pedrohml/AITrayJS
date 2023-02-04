@@ -14,24 +14,28 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const electron_1 = require("electron");
 const UserData_1 = require("../UserData");
+const Bounds_1 = require("../Bounds");
 const path_1 = __importDefault(require("path"));
 class PromptWindow extends electron_1.BrowserWindow {
     constructor(providers, prefs, opts, shouldExecuteOnStartup) {
-        const defaultWidth = 740, defautHeight = 380;
+        const minWidth = 740;
+        const maxHeight = 380;
+        const actualWidth = Math.max(prefs.width || 0, minWidth);
+        const actualHeight = Math.max(prefs.height || 0, maxHeight);
         super(Object.assign({
-            // TODO: Issue when change display settings. Window can be lost
-            // x: prefs.x,
-            // y: prefs.y,
-            minWidth: defaultWidth,
-            minHeight: defautHeight,
-            width: prefs.width || defaultWidth,
-            height: prefs.height || defautHeight,
+            x: prefs.x || null,
+            y: prefs.y || null,
+            minWidth: minWidth,
+            minHeight: maxHeight,
+            width: actualWidth,
+            height: actualHeight,
             webPreferences: {
                 preload: path_1.default.join(__dirname, '../../src/ui-controls/PromptWindowPreload.js')
             },
             title: 'AI Prompt',
             // resizable: false
         }, opts));
+        this.adjustBounds();
         this.prefs = new UserData_1.PromptWindowPrefs(prefs);
         this.providers = providers;
         shouldExecuteOnStartup || (shouldExecuteOnStartup = false);
@@ -74,6 +78,21 @@ class PromptWindow extends electron_1.BrowserWindow {
         this.webContents.ipc.on('should-execute-on-startup', (evt) => {
             evt.returnValue = shouldExecuteOnStartup;
         });
+    }
+    adjustBounds() {
+        const bounds = new Bounds_1.Bounds(this.getBounds());
+        const display = electron_1.screen.getDisplayMatching(bounds);
+        const displayBounds = new Bounds_1.Bounds(display.workArea);
+        const intersection = bounds.interseect(displayBounds);
+        if (intersection.width == 0 && intersection.height == 0) {
+            const newBounds = {
+                x: (displayBounds.width - bounds.width) / 2,
+                y: (displayBounds.height - bounds.height) / 2,
+                width: bounds.width,
+                height: bounds.height
+            };
+            this.setBounds(newBounds);
+        }
     }
     setPreferences(preferences) {
         this.prefs = new UserData_1.PromptWindowPrefs(Object.assign(Object.assign({}, preferences), this.getBounds()));

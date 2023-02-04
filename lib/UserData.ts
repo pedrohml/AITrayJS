@@ -2,21 +2,7 @@ import IProvider from "providers/IProvider";
 import OpenAIProvider from "./providers/OpenAIProvider";
 import settings from 'electron-settings';
 import { safeStorage } from "electron";
-
-export class Bounds {
-    public x?: number;
-    public y?: number;
-    public width?: number;
-    public height?: number;
-
-    constructor(obj?:any) {
-        obj ||= {};
-        this.x ||= obj.x;
-        this.y ||= obj.y;
-        this.width ||= obj.width;
-        this.height ||= obj.height;
-    }
-}
+import { Bounds } from "./Bounds";
 
 export class PromptWindowPrefs extends Bounds {
     public providerId: string;
