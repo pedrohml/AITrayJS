@@ -33,7 +33,7 @@
         <div class="hstack strech-all strech-self">
           <div class="field vertical">
             <label for="context">Conte<u>x</u>t</label>
-            <textarea id="context" ref="context" accesskey="x" rows="10" v-model="context" :disabled="!!clipboardAutoMode"></textarea>
+            <textarea id="context" ref="context" accesskey="x" rows="10" v-model="context" :disabled="!!clipboardAutoMode" @change="contextChanged()"></textarea>
           </div>
           <div class="field vertical">
             <label for="result"><u>R</u>esult</label>

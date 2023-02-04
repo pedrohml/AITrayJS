@@ -30,6 +30,12 @@ const PromptWindowBridge = {
   shouldExecuteOnStartup(): boolean {
     return ipcRenderer.sendSync('should-execute-on-startup');
   },
+  isWindowVisible(): boolean {
+    return ipcRenderer.sendSync('prompt-window-is-visible');
+  },
+  focusWindow(): void {
+    ipcRenderer.send('prompt-window-focus');
+  },
   closePromptWindow() {
     ipcRenderer.send('close-prompt-window');
   },

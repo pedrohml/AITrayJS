@@ -78,6 +78,12 @@ class PromptWindow extends electron_1.BrowserWindow {
         this.webContents.ipc.on('should-execute-on-startup', (evt) => {
             evt.returnValue = shouldExecuteOnStartup;
         });
+        this.webContents.ipc.on('prompt-window-is-visible', (evt) => {
+            evt.returnValue = this.isVisible();
+        });
+        this.webContents.ipc.on('prompt-window-focus', (evt) => {
+            this.focus();
+        });
     }
     adjustBounds() {
         const bounds = new Bounds_1.Bounds(this.getBounds());

@@ -29,6 +29,12 @@ const PromptWindowBridge = {
     shouldExecuteOnStartup() {
         return electron_1.ipcRenderer.sendSync('should-execute-on-startup');
     },
+    isWindowVisible() {
+        return electron_1.ipcRenderer.sendSync('prompt-window-is-visible');
+    },
+    focusWindow() {
+        electron_1.ipcRenderer.send('prompt-window-focus');
+    },
     closePromptWindow() {
         electron_1.ipcRenderer.send('close-prompt-window');
     },

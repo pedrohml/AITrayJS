@@ -86,6 +86,14 @@ class PromptWindow extends BrowserWindow {
         this.webContents.ipc.on('should-execute-on-startup', (evt) => {
             evt.returnValue = shouldExecuteOnStartup;
         });
+
+        this.webContents.ipc.on('prompt-window-is-visible', (evt) => {
+            evt.returnValue = this.isVisible();
+        });
+
+        this.webContents.ipc.on('prompt-window-focus', (evt) => {
+            this.focus();
+        });
     }
 
     private adjustBounds() {
