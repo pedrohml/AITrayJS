@@ -24,15 +24,10 @@ class SetupWindow extends BrowserWindow {
 
         this.loadFile(path.join(__dirname, '../../src/layouts/setup-window.html'));
 
-        this.webContents.ipc.handle('setup-form-submit', async (evt, userData) => await this.submitForm(userData));
         this.webContents.ipc.on('close-setup-window', (evt) => this.close());
         this.webContents.ipc.on('open-macro', (evt, macroIdx) => {
             this.configMacro(macroIdx);
         });
-    }
-
-    private async submitForm(userData: UserData) {
-        await settings.set('aitray', JSON.parse(JSON.stringify(userData)));
     }
 
     private async configMacro(macroIdx: number) {

@@ -1,11 +1,12 @@
 import { contextBridge, ipcRenderer } from "electron";
+import { UserData } from "../UserData";
 
 const SetupWindowBridge = {
-  readUserData() {
-    return ipcRenderer.invoke('read-userdata').then(JSON.parse);
+  async readUserData() : Promise<UserData> {
+    return await ipcRenderer.invoke('read-userdata').then(JSON.parse);
   },
-  writeUserData(userData: any) {
-    return ipcRenderer.invoke('write-userdata', userData);
+  async writeUserData(userData: any) : Promise<void> {
+    await ipcRenderer.invoke('write-userdata', JSON.stringify(userData));
   },
   openMacro(macroIdx: number) {
     ipcRenderer.send('open-macro', macroIdx);

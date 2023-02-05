@@ -108,6 +108,7 @@ app.whenReady().then(async () => {
     });
 
     ipcMain.handle('write-userdata', async (evt, userData) => {
+        userData = JSON.parse(userData);
         delete userData.providers;
         await UserData.fromObject(userData).save();
     });

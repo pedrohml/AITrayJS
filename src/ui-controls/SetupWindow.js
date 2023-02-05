@@ -14,7 +14,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const electron_1 = require("electron");
 const UserData_1 = require("../UserData");
-const electron_settings_1 = __importDefault(require("electron-settings"));
 const path_1 = __importDefault(require("path"));
 const PromptWindow_1 = __importDefault(require("./PromptWindow"));
 const ProviderFactory_1 = require("../providers/ProviderFactory");
@@ -31,15 +30,9 @@ class SetupWindow extends electron_1.BrowserWindow {
         this.userData = userData;
         this.setMenuBarVisibility(false);
         this.loadFile(path_1.default.join(__dirname, '../../src/layouts/setup-window.html'));
-        this.webContents.ipc.handle('setup-form-submit', (evt, userData) => __awaiter(this, void 0, void 0, function* () { return yield this.submitForm(userData); }));
         this.webContents.ipc.on('close-setup-window', (evt) => this.close());
         this.webContents.ipc.on('open-macro', (evt, macroIdx) => {
             this.configMacro(macroIdx);
-        });
-    }
-    submitForm(userData) {
-        return __awaiter(this, void 0, void 0, function* () {
-            yield electron_settings_1.default.set('aitray', JSON.parse(JSON.stringify(userData)));
         });
     }
     configMacro(macroIdx) {
