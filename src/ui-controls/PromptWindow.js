@@ -19,14 +19,14 @@ const path_1 = __importDefault(require("path"));
 class PromptWindow extends electron_1.BrowserWindow {
     constructor(providers, prefs, opts, shouldExecuteOnStartup) {
         const minWidth = 740;
-        const maxHeight = 380;
+        const minHeight = 380;
         const actualWidth = Math.max(prefs.width || 0, minWidth);
-        const actualHeight = Math.max(prefs.height || 0, maxHeight);
+        const actualHeight = Math.max(prefs.height || 0, minHeight);
         super(Object.assign({
             x: prefs.x || null,
             y: prefs.y || null,
             minWidth: minWidth,
-            minHeight: maxHeight,
+            minHeight: minHeight,
             width: actualWidth,
             height: actualHeight,
             webPreferences: {
