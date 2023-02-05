@@ -32,8 +32,13 @@ class OpenAIProvider {
     request(model, prompt, context) {
         return __awaiter(this, void 0, void 0, function* () {
             const requestContext = model.buildRequestContext(prompt, context);
-            const response = yield this.client.createCompletion(requestContext.payload);
-            return model.processResponse(response);
+            try {
+                const response = yield this.client.createCompletion(requestContext.payload);
+                return model.processResponse(response);
+            }
+            catch (err) {
+                return `Failed when prompting [Message=${err}]`;
+            }
         });
     }
 }

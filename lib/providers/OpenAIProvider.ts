@@ -25,8 +25,12 @@ export class OpenAIProvider implements IProvider {
 
     public async request(model: IModel, prompt: string, context: string | null) : Promise<string> {
         const requestContext = model.buildRequestContext(prompt, context);
-        const response = await this.client.createCompletion(requestContext.payload as CreateCompletionRequest);
-        return model.processResponse(response);
+        try {
+            const response = await this.client.createCompletion(requestContext.payload as CreateCompletionRequest);
+            return model.processResponse(response);
+        } catch (err) {
+            return `Failed when prompting [Message=${err}]`;
+        }
     }
 }
 
