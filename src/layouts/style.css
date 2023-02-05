@@ -23,6 +23,58 @@ body {
     height: 100%;
 }
 
+textarea, input[type=text], input:not([type]) {
+    border-width: 1px;
+    border-style: solid;
+    min-height: 20px;
+    padding: 5px;
+}
+
+input[type=checkbox] {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    appearance: none;
+    width: 40px;
+    height: 20px;
+    border-width: 1px;
+    border-style: solid;
+    border-radius: 10px;
+    padding: 2px;
+}
+
+input[type=checkbox]:before {
+    display: block;
+    border-width: 1px;
+    border-style: solid;
+    border-radius: 5px;
+    width: 10px;
+    height: 10px;
+    content: "";
+    align-self: flex-start;
+}
+
+input[type=checkbox]:checked:before {
+    align-self: flex-end;
+}
+
+input[type=checkbox] ~ label {
+    align-self: center;
+}
+
+select, button {
+    border-width: 1px;
+    border-style: solid;
+}
+
+button {
+    padding: 10px;
+}
+
+select {
+    padding: 5px;
+}
+
 @media (prefers-color-scheme: dark) {
     body {
         color: white;
@@ -33,9 +85,7 @@ body {
     textarea, input[type=text], input:not([type]) {
         color: white;
         background: #222;
-        border: 1px solid gray;
-        min-height: 20px;
-        padding: 5px;
+        border-color: gray;
     }
 
     textarea:read-only {
@@ -43,16 +93,8 @@ body {
     }
 
     input[type=checkbox] {
-        display: flex;
-        flex-direction: column;
-        justify-content: space-around;
-        appearance: none;
-        width: 40px;
-        height: 20px;
         background: #333;
-        border: 1px solid gray;
-        border-radius: 10px;
-        padding: 2px;
+        border-color: gray;
     }
 
     input[type=checkbox]:checked {
@@ -60,38 +102,16 @@ body {
     }
 
     input[type=checkbox]:before {
-        display: block;
-        border: 1px solid gray;
-        border-radius: 5px;
-        width: 10px;
-        height: 10px;
+        border-color: gray;
         background: white;
-        content: "";
-        align-self: flex-start;
     }
     
-    input[type=checkbox]:checked:before {
-        align-self: flex-end;
-    }
-
-    input[type=checkbox] ~ label {
-        align-self: center;
-    }
-
     select, button {
         color: white;
         background: #444;
-        border: 1px solid gray;
+        border-color: gray;
     }
 
-    button {
-        padding: 10px;
-    }
-
-    select {
-        padding: 5px;
-    }
-    
     select:hover, button:hover {
         background: #555;
     }
