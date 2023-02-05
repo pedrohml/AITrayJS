@@ -52,28 +52,34 @@ export class UserData {
     }
 
     public static async load() : Promise<UserData> {
-        const settingsObject = await settings.get('aitray') as object;
-        const userData = UserData.fromObject(settingsObject);
-        try {
-            const encodedAccessKey = Buffer.from(userData.openaiAccessKey, 'base64');
-            userData.openaiAccessKey = safeStorage.decryptString(encodedAccessKey);
-        } catch (err) {
-            console.error(err);
-            userData.openaiAccessKey = '';
+        const userDataJson = (await settings.get('aitray'))?.toString() || '';
+        let userData = null;
+        if (userDataJson) {
+            try {
+                const userDataBuffer = Buffer.from(userDataJson, 'base64');
+                const userDataDecrypted = safeStorage.decryptString(userDataBuffer);
+                userData = UserData.fromObject(JSON.parse(userDataDecrypted));
+            } catch (err) {
+                userData = new UserData();
+                console.error(`Failed to read user data [File=${settings.file()}, Message=${err}]`);
+            }
+            userData.loadProviders();
         }
-        userData.loadProviders();
-        return userData;
+        return userData || new UserData();
     }
 
     public async save() : Promise<void> {
         const userData = new UserData(this); // without providers
-        const buffer = safeStorage.encryptString(userData.openaiAccessKey);
-        const decodedAccessKey = buffer.toString('base64');
-        userData.openaiAccessKey = decodedAccessKey;
-        await settings.set('aitray', JSON.parse(JSON.stringify(userData)));
+        const userDataEncrypted = safeStorage.encryptString(JSON.stringify(userData));
+        const userDataEncoded = userDataEncrypted.toString('base64');
+        try {
+            await settings.set('aitray', userDataEncoded);
+        } catch (err) {
+            console.error(`Failed to write user data [File=${settings.file()}, Message=${err}]`);
+        }
     }
 
-    private loadProviders() : void{
+    private loadProviders() : void {
         this.providers = [
             new OpenAIProvider(this.openaiAccessKey)
         ];

@@ -48,28 +48,36 @@ class UserData {
         return new UserData(obj);
     }
     static load() {
+        var _a;
         return __awaiter(this, void 0, void 0, function* () {
-            const settingsObject = yield electron_settings_1.default.get('aitray');
-            const userData = UserData.fromObject(settingsObject);
-            try {
-                const encodedAccessKey = Buffer.from(userData.openaiAccessKey, 'base64');
-                userData.openaiAccessKey = electron_1.safeStorage.decryptString(encodedAccessKey);
+            const userDataJson = ((_a = (yield electron_settings_1.default.get('aitray'))) === null || _a === void 0 ? void 0 : _a.toString()) || '';
+            let userData = null;
+            if (userDataJson) {
+                try {
+                    const userDataBuffer = Buffer.from(userDataJson, 'base64');
+                    const userDataDecrypted = electron_1.safeStorage.decryptString(userDataBuffer);
+                    userData = UserData.fromObject(JSON.parse(userDataDecrypted));
+                }
+                catch (err) {
+                    userData = new UserData();
+                    console.error(`Failed to read user data [File=${electron_settings_1.default.file()}, Message=${err}]`);
+                }
+                userData.loadProviders();
             }
-            catch (err) {
-                console.error(err);
-                userData.openaiAccessKey = '';
-            }
-            userData.loadProviders();
-            return userData;
+            return userData || new UserData();
         });
     }
     save() {
         return __awaiter(this, void 0, void 0, function* () {
             const userData = new UserData(this); // without providers
-            const buffer = electron_1.safeStorage.encryptString(userData.openaiAccessKey);
-            const decodedAccessKey = buffer.toString('base64');
-            userData.openaiAccessKey = decodedAccessKey;
-            yield electron_settings_1.default.set('aitray', JSON.parse(JSON.stringify(userData)));
+            const userDataEncrypted = electron_1.safeStorage.encryptString(JSON.stringify(userData));
+            const userDataEncoded = userDataEncrypted.toString('base64');
+            try {
+                yield electron_settings_1.default.set('aitray', userDataEncoded);
+            }
+            catch (err) {
+                console.error(`Failed to write user data [File=${electron_settings_1.default.file()}, Message=${err}]`);
+            }
         });
     }
     loadProviders() {
