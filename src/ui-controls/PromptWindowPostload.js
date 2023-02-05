@@ -2,41 +2,25 @@ const vueApp = new Vue({
   el: '#app',
   data() {
     const providers = PromptWindowBridge.getProviders();
-    const preferences = PromptWindowBridge.getPreferences();
     const providersMap = Object.fromEntries(providers.map(p => [p.id, p]));
-    const clipboardAutoMode = preferences.clipboardAutoMode || false;
-    const isAlwaysOnTop = preferences.isAlwaysOnTop || false;
+    const preferences = this.getPreferences();
     
-    if (clipboardAutoMode) {
-      delete preferences.context;
-      delete preferences.result;
-    }
-    
-    PromptWindowBridge.setAlwaysOnTop(isAlwaysOnTop);
-    
-    if (!preferences.providerId) {
-      delete preferences.providerId;
-      delete preferences.modelId;
-    }
-    
-    if (!preferences.modelId) {
-      delete preferences.modelId;
-    }
+    PromptWindowBridge.setAlwaysOnTop(preferences.isAlwaysOnTop);
     
     return {...{
       providers: providersMap,
       providerId: 'openai',
       modelId: 'text-davinci-003',
-      context: clipboardAutoMode ? this.readFromClipboard() : '',
+      context: preferences.clipboardAutoMode ? this.readFromClipboard() : '',
       prompt: '',
       result: '',
-      clipboardAutoMode: clipboardAutoMode,
-      isAlwaysOnTop: isAlwaysOnTop
+      clipboardAutoMode: preferences.clipboardAutoMode,
+      isAlwaysOnTop: preferences.isAlwaysOnTop
     }, ...preferences};
   },
   mounted() {
     const app = this;
-    const watcher = new Watcher(
+    this.clipboardWatcher = this.clipboardWatcher || new Watcher(
       250,
       () => {
         if (app.clipboardAutoMode) {
@@ -48,37 +32,52 @@ const vueApp = new Vue({
         }
       },
       () => false);
-      watcher.start();
+      this.clipboardWatcher.start();
       
       document.addEventListener('keydown', (event) => {
         if (event.ctrlKey && event.key === 'Enter')
-        app.submitForm();
+          app.submitForm();
         else if (event.key === 'Escape')
-        PromptWindowBridge.closePromptWindow();
+          PromptWindowBridge.closePromptWindow();
       });
-      
+
       if (PromptWindowBridge.shouldExecuteOnStartup())
         this.submitForm();
     },
     updated() {
-      const currentPrefs = JSON.parse(JSON.stringify(this.$data));
-      if (!this.comparePrefs(this.previousPrefs, currentPrefs)) {
-        PromptWindowBridge.setAlwaysOnTop(!!this.isAlwaysOnTop);
-        PromptWindowBridge.setPreferences(currentPrefs);
-        this.previousPrefs = currentPrefs;
-      }
+      PromptWindowBridge.setAlwaysOnTop(!!this.isAlwaysOnTop);
     },
     methods: {
       async submitForm() {
         if (this.prompt) {
           this.$refs.loadingOverlay.removeAttribute("hidden");
-          this.result = await PromptWindowBridge.submitForm(JSON.parse(JSON.stringify(this.$data)));
+          const currentData = JSON.parse(JSON.stringify(this.$data));
+          PromptWindowBridge.setPreferences(currentData);
+          this.result = await PromptWindowBridge.submitForm(currentData);
           this.$refs.loadingOverlay.setAttribute("hidden", true);
         }
       },
       readFromClipboard() {
         return (PromptWindowBridge.readFromClipboard() || '').trim();
 
+      },
+      getPreferences() {
+        const preferences = PromptWindowBridge.getPreferences();
+        const clipboardAutoMode = preferences.clipboardAutoMode || false;
+
+        if (clipboardAutoMode) {
+          delete preferences.context;
+          delete preferences.result;
+        }
+
+        if (!preferences.providerId) {
+          delete preferences.providerId;
+          delete preferences.modelId;
+        } else if (!preferences.modelId) {
+          delete preferences.modelId;
+        }
+
+        return preferences;
       },
       clearForm() {
         this.context = this.clipboardAutoMode ? this.context : '';
