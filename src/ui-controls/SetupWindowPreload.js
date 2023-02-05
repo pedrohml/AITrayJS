@@ -13,19 +13,19 @@ const electron_1 = require("electron");
 const SetupWindowBridge = {
     readUserData() {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield electron_1.ipcRenderer.invoke('read-userdata').then(JSON.parse);
+            return yield electron_1.ipcRenderer.invoke('userdata:read').then(JSON.parse);
         });
     },
     writeUserData(userData) {
         return __awaiter(this, void 0, void 0, function* () {
-            yield electron_1.ipcRenderer.invoke('write-userdata', JSON.stringify(userData));
+            yield electron_1.ipcRenderer.invoke('userdata:write', JSON.stringify(userData));
         });
     },
     openMacro(macroIdx) {
-        electron_1.ipcRenderer.send('open-macro', macroIdx);
+        electron_1.ipcRenderer.send('setup:open-macro', macroIdx);
     },
     closeSetupWindow() {
-        electron_1.ipcRenderer.send('close-setup-window');
+        electron_1.ipcRenderer.send('setup:close');
     }
 };
 electron_1.contextBridge.exposeInMainWorld('SetupWindowBridge', SetupWindowBridge);

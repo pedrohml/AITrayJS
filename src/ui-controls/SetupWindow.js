@@ -30,8 +30,8 @@ class SetupWindow extends electron_1.BrowserWindow {
         this.userData = userData;
         this.setMenuBarVisibility(false);
         this.loadFile(path_1.default.join(__dirname, '../../src/layouts/setup-window.html'));
-        this.webContents.ipc.on('close-setup-window', (evt) => this.close());
-        this.webContents.ipc.on('open-macro', (evt, macroIdx) => {
+        this.webContents.ipc.on('setup:close', (evt) => this.close());
+        this.webContents.ipc.on('setup:open-macro', (evt, macroIdx) => {
             this.configMacro(macroIdx);
         });
     }

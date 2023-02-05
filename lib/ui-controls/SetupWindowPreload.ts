@@ -3,16 +3,16 @@ import { UserData } from "../UserData";
 
 const SetupWindowBridge = {
   async readUserData() : Promise<UserData> {
-    return await ipcRenderer.invoke('read-userdata').then(JSON.parse);
+    return await ipcRenderer.invoke('userdata:read').then(JSON.parse);
   },
   async writeUserData(userData: any) : Promise<void> {
-    await ipcRenderer.invoke('write-userdata', JSON.stringify(userData));
+    await ipcRenderer.invoke('userdata:write', JSON.stringify(userData));
   },
   openMacro(macroIdx: number) {
-    ipcRenderer.send('open-macro', macroIdx);
+    ipcRenderer.send('setup:open-macro', macroIdx);
   },
   closeSetupWindow() {
-    ipcRenderer.send('close-setup-window');
+    ipcRenderer.send('setup:close');
   }
 }
 

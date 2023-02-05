@@ -64,39 +64,39 @@ class PromptWindow extends BrowserWindow {
             return await this.submitForm(data);
         });
 
-        this.webContents.ipc.on('set-always-on-top', (evt, value) => {
+        this.webContents.ipc.on('prompt:set-always-on-top', (evt, value) => {
             this.setAlwaysOnTop(value);
         });
 
-        this.webContents.ipc.on('close-prompt-window', () => {
+        this.webContents.ipc.on('prompt:close', () => {
             this.close();
         });
 
-        this.webContents.ipc.handle('get-providers', async (evt) => {
+        this.webContents.ipc.handle('prompt:get-providers', async (evt) => {
             return JSON.stringify(await providerFactory.getAllProviders());
         });
 
-        this.webContents.ipc.on('get-preferences', (evt) => {
+        this.webContents.ipc.on('prompt:get-preferences', (evt) => {
             evt.returnValue = JSON.stringify(this.prefs);
         });
 
-        this.webContents.ipc.on('set-preferences', (evt, prefs) => {
+        this.webContents.ipc.on('prompt:set-preferences', (evt, prefs) => {
             this.setPreferences(new PromptWindowPrefs(JSON.parse(prefs)));
         });
 
-        this.webContents.ipc.on('should-execute-on-startup', (evt) => {
+        this.webContents.ipc.on('prompt:should-execute-on-startup', (evt) => {
             evt.returnValue = shouldExecuteOnStartup;
         });
 
-        this.webContents.ipc.on('prompt-window-is-visible', (evt) => {
+        this.webContents.ipc.on('prompt:is-visible', (evt) => {
             evt.returnValue = this.isVisible();
         });
 
-        this.webContents.ipc.on('prompt-window-focus', (evt) => {
+        this.webContents.ipc.on('prompt:focus', (evt) => {
             this.focus();
         });
 
-        this.webContents.ipc.on('is-prompt-save-enabled', (evt) => {
+        this.webContents.ipc.on('prompt:is-save-enabled', (evt) => {
             evt.returnValue = isSaveEnabled || false;
         });
     }

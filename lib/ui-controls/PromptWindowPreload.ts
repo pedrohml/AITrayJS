@@ -4,49 +4,43 @@ import IProvider from "providers/IProvider";
 
 const PromptWindowBridge = {
   submitForm (formData: any) {
-    return ipcRenderer.invoke('prompt-form-submit', formData);
+    return ipcRenderer.invoke('prompt:submit-form', formData);
   },
   readFromClipboard() {
-    return ipcRenderer.sendSync('clipboard-readtext');
-  },
-  readUserDataSync() : UserData {
-    return JSON.parse(ipcRenderer.sendSync('read-userdata-sync'));
+    return ipcRenderer.sendSync('clipboard:read-text');
   },
   readUserData() {
-    return ipcRenderer.invoke('read-userdata').then(JSON.parse);
+    return ipcRenderer.invoke('userdata:read').then(JSON.parse);
   },
   writeUserData(userData: any) {
-    return ipcRenderer.invoke('write-userdata', userData);
+    return ipcRenderer.invoke('userdata:write', userData);
   },
   isSaveEnabled() {
-    return ipcRenderer.sendSync('is-prompt-save-enabled');
+    return ipcRenderer.sendSync('prompt:is-save-enabled');
   },
   async getProviders() : Promise<IProvider[]> {
-    return JSON.parse(await ipcRenderer.invoke('get-providers'));
+    return JSON.parse(await ipcRenderer.invoke('prompt:get-providers'));
   },
   getPreferences() : IProvider[] {
-    return JSON.parse(ipcRenderer.sendSync('get-preferences'));
+    return JSON.parse(ipcRenderer.sendSync('prompt:get-preferences'));
   },
   setPreferences(prefs: PromptWindowPrefs) : void {
-    ipcRenderer.send('set-preferences', JSON.stringify(prefs));
+    ipcRenderer.send('prompt:set-preferences', JSON.stringify(prefs));
   },
   shouldExecuteOnStartup(): boolean {
-    return ipcRenderer.sendSync('should-execute-on-startup');
+    return ipcRenderer.sendSync('prompt:should-execute-on-startup');
   },
   isWindowVisible(): boolean {
-    return ipcRenderer.sendSync('prompt-window-is-visible');
+    return ipcRenderer.sendSync('prompt:is-visible');
   },
   focusWindow(): void {
-    ipcRenderer.send('prompt-window-focus');
+    ipcRenderer.send('prompt:focus');
   },
   closePromptWindow() {
-    ipcRenderer.send('close-prompt-window');
+    ipcRenderer.send('prompt:close');
   },
   setAlwaysOnTop(flag: boolean) {
-    ipcRenderer.send('set-always-on-top', flag);
-  },
-  shutdown() {
-    ipcRenderer.send('shutdown');
+    ipcRenderer.send('prompt:set-always-on-top', flag);
   }
 }
 

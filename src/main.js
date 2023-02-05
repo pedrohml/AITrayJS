@@ -87,28 +87,17 @@ app.whenReady().then(async () => {
     globalShortcut.register('CTRL+ALT+8', () => executeMacro(0));
     globalShortcut.register('CTRL+ALT+9', () => executeMacro(1));
     globalShortcut.register('CTRL+ALT+0', () => executeMacro(2));
+    globalShortcut.register("CTRL+ALT+P", () => promptWindow.show());
 
-    globalShortcut.register("CTRL+ALT+P", () => {
-        promptWindow.show();
-    });
-
-    ipcMain.on('clipboard-readtext', (event) => {
+    ipcMain.on('clipboard:read-text', (event) => {
         event.returnValue = clipboard.readText();
     });
 
-    ipcMain.on('shutdown', async () => {
-        app.quit();
-    });
-
-    ipcMain.on('read-userdata-sync', (evt) => {
-        evt.returnValue = JSON.stringify(userData);
-    });
-
-    ipcMain.handle('read-userdata', async (evt) => {
+    ipcMain.handle('userdata:read', async (evt) => {
         return JSON.stringify(await UserData.load());
     });
 
-    ipcMain.handle('write-userdata', async (evt, userData) => {
+    ipcMain.handle('userdata:write', async (evt, userData) => {
         userData = JSON.parse(userData);
         delete userData.providers;
         await UserData.fromObject(userData).save();

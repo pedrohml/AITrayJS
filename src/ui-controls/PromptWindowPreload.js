@@ -12,51 +12,45 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const electron_1 = require("electron");
 const PromptWindowBridge = {
     submitForm(formData) {
-        return electron_1.ipcRenderer.invoke('prompt-form-submit', formData);
+        return electron_1.ipcRenderer.invoke('prompt:submit-form', formData);
     },
     readFromClipboard() {
-        return electron_1.ipcRenderer.sendSync('clipboard-readtext');
-    },
-    readUserDataSync() {
-        return JSON.parse(electron_1.ipcRenderer.sendSync('read-userdata-sync'));
+        return electron_1.ipcRenderer.sendSync('clipboard:read-text');
     },
     readUserData() {
-        return electron_1.ipcRenderer.invoke('read-userdata').then(JSON.parse);
+        return electron_1.ipcRenderer.invoke('userdata:read').then(JSON.parse);
     },
     writeUserData(userData) {
-        return electron_1.ipcRenderer.invoke('write-userdata', userData);
+        return electron_1.ipcRenderer.invoke('userdata:write', userData);
     },
     isSaveEnabled() {
-        return electron_1.ipcRenderer.sendSync('is-prompt-save-enabled');
+        return electron_1.ipcRenderer.sendSync('prompt:is-save-enabled');
     },
     getProviders() {
         return __awaiter(this, void 0, void 0, function* () {
-            return JSON.parse(yield electron_1.ipcRenderer.invoke('get-providers'));
+            return JSON.parse(yield electron_1.ipcRenderer.invoke('prompt:get-providers'));
         });
     },
     getPreferences() {
-        return JSON.parse(electron_1.ipcRenderer.sendSync('get-preferences'));
+        return JSON.parse(electron_1.ipcRenderer.sendSync('prompt:get-preferences'));
     },
     setPreferences(prefs) {
-        electron_1.ipcRenderer.send('set-preferences', JSON.stringify(prefs));
+        electron_1.ipcRenderer.send('prompt:set-preferences', JSON.stringify(prefs));
     },
     shouldExecuteOnStartup() {
-        return electron_1.ipcRenderer.sendSync('should-execute-on-startup');
+        return electron_1.ipcRenderer.sendSync('prompt:should-execute-on-startup');
     },
     isWindowVisible() {
-        return electron_1.ipcRenderer.sendSync('prompt-window-is-visible');
+        return electron_1.ipcRenderer.sendSync('prompt:is-visible');
     },
     focusWindow() {
-        electron_1.ipcRenderer.send('prompt-window-focus');
+        electron_1.ipcRenderer.send('prompt:focus');
     },
     closePromptWindow() {
-        electron_1.ipcRenderer.send('close-prompt-window');
+        electron_1.ipcRenderer.send('prompt:close');
     },
     setAlwaysOnTop(flag) {
-        electron_1.ipcRenderer.send('set-always-on-top', flag);
-    },
-    shutdown() {
-        electron_1.ipcRenderer.send('shutdown');
+        electron_1.ipcRenderer.send('prompt:set-always-on-top', flag);
     }
 };
 electron_1.contextBridge.exposeInMainWorld('PromptWindowBridge', PromptWindowBridge);

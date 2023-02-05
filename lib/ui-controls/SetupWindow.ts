@@ -24,8 +24,8 @@ class SetupWindow extends BrowserWindow {
 
         this.loadFile(path.join(__dirname, '../../src/layouts/setup-window.html'));
 
-        this.webContents.ipc.on('close-setup-window', (evt) => this.close());
-        this.webContents.ipc.on('open-macro', (evt, macroIdx) => {
+        this.webContents.ipc.on('setup:close', (evt) => this.close());
+        this.webContents.ipc.on('setup:open-macro', (evt, macroIdx) => {
             this.configMacro(macroIdx);
         });
     }
