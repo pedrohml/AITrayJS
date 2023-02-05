@@ -18,8 +18,8 @@ const PromptWindowBridge = {
   writeUserData(userData: any) {
     return ipcRenderer.invoke('write-userdata', userData);
   },
-  getProviders() : IProvider[] {
-    return JSON.parse(ipcRenderer.sendSync('get-providers'));
+  async getProviders() : Promise<IProvider[]> {
+    return JSON.parse(await ipcRenderer.invoke('get-providers'));
   },
   getPreferences() : IProvider[] {
     return JSON.parse(ipcRenderer.sendSync('get-preferences'));

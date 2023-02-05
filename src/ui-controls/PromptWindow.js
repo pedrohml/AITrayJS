@@ -17,7 +17,7 @@ const UserData_1 = require("../UserData");
 const Bounds_1 = require("../Bounds");
 const path_1 = __importDefault(require("path"));
 class PromptWindow extends electron_1.BrowserWindow {
-    constructor(providers, prefs, opts, shouldExecuteOnStartup) {
+    constructor(providerFactory, prefs, opts, shouldExecuteOnStartup) {
         const minWidth = 740;
         const minHeight = 380;
         const actualWidth = Math.max(prefs.width || 0, minWidth);
@@ -37,7 +37,7 @@ class PromptWindow extends electron_1.BrowserWindow {
         }, opts));
         this.adjustBounds();
         this.prefs = new UserData_1.PromptWindowPrefs(prefs);
-        this.providers = providers;
+        this.providerFactory = providerFactory;
         shouldExecuteOnStartup || (shouldExecuteOnStartup = false);
         this.setMenuBarVisibility(false);
         this.loadFile(path_1.default.join(__dirname, '../../src/layouts/prompt-window.html'));
@@ -66,9 +66,9 @@ class PromptWindow extends electron_1.BrowserWindow {
         this.webContents.ipc.on('close-prompt-window', () => {
             this.close();
         });
-        this.webContents.ipc.on('get-providers', (evt) => {
-            evt.returnValue = JSON.stringify(providers);
-        });
+        this.webContents.ipc.handle('get-providers', (evt) => __awaiter(this, void 0, void 0, function* () {
+            return JSON.stringify(yield providerFactory.getAllProviders());
+        }));
         this.webContents.ipc.on('get-preferences', (evt) => {
             evt.returnValue = JSON.stringify(this.prefs);
         });
@@ -105,10 +105,9 @@ class PromptWindow extends electron_1.BrowserWindow {
         this.onSavePreferences && this.onSavePreferences(this.prefs);
     }
     submitForm(data) {
-        var _a;
         return __awaiter(this, void 0, void 0, function* () {
             data || (data = this.prefs);
-            const provider = (_a = this.providers) === null || _a === void 0 ? void 0 : _a.filter(p => p.id === data.providerId)[0];
+            const provider = yield this.providerFactory.getProvider(data.providerId);
             const model = provider === null || provider === void 0 ? void 0 : provider.models.filter(m => m.id === data.modelId)[0];
             if (provider && model) {
                 try {

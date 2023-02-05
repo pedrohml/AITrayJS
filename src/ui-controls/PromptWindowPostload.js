@@ -1,14 +1,12 @@
 const vueApp = new Vue({
   el: '#app',
   data() {
-    const providers = PromptWindowBridge.getProviders();
-    const providersMap = Object.fromEntries(providers.map(p => [p.id, p]));
     const preferences = this.getPreferences();
     
     PromptWindowBridge.setAlwaysOnTop(preferences.isAlwaysOnTop);
     
     return {...{
-      providers: providersMap,
+      providers: undefined, // async populated
       providerId: 'openai',
       modelId: 'text-davinci-003',
       context: preferences.clipboardAutoMode ? this.readFromClipboard() : '',
@@ -18,8 +16,13 @@ const vueApp = new Vue({
       isAlwaysOnTop: preferences.isAlwaysOnTop
     }, ...preferences};
   },
-  mounted() {
+  async mounted() {
     const app = this;
+    const providers = await PromptWindowBridge.getProviders();
+    const providersMap = Object.fromEntries(providers.map(p => [p.id, p]));
+
+    this.providers = providersMap;
+
     this.clipboardWatcher = this.clipboardWatcher || new Watcher(
       250,
       () => {

@@ -2,14 +2,14 @@ import { BrowserWindow, BrowserWindowConstructorOptions, screen } from "electron
 import { PromptWindowPrefs } from "../UserData";
 import { Bounds } from "../Bounds";
 import path from "path";
-import IProvider from "providers/IProvider";
+import { ProviderFactory } from "providers/ProviderFactory";
 
 class PromptWindow extends BrowserWindow {
-    private providers?: IProvider[];
+    private providerFactory: ProviderFactory;
     private prefs: PromptWindowPrefs;
     public onSavePreferences?: (prefs: PromptWindowPrefs) => void | Promise<void>;
 
-    constructor(providers: IProvider[], prefs: PromptWindowPrefs, opts: BrowserWindowConstructorOptions, shouldExecuteOnStartup?: boolean) {
+    constructor(providerFactory: ProviderFactory, prefs: PromptWindowPrefs, opts: BrowserWindowConstructorOptions, shouldExecuteOnStartup?: boolean) {
         const minWidth = 740;
         const minHeight = 380;
         const actualWidth = Math.max(prefs.width || 0, minWidth);
@@ -32,7 +32,7 @@ class PromptWindow extends BrowserWindow {
         this.adjustBounds();
 
         this.prefs = new PromptWindowPrefs(prefs);
-        this.providers = providers;
+        this.providerFactory = providerFactory;
 
         shouldExecuteOnStartup ||= false;
 
@@ -71,8 +71,8 @@ class PromptWindow extends BrowserWindow {
             this.close();
         });
 
-        this.webContents.ipc.on('get-providers', (evt) => {
-            evt.returnValue = JSON.stringify(providers);
+        this.webContents.ipc.handle('get-providers', async (evt) => {
+            return JSON.stringify(await providerFactory.getAllProviders());
         });
 
         this.webContents.ipc.on('get-preferences', (evt) => {
@@ -120,7 +120,7 @@ class PromptWindow extends BrowserWindow {
 
     private async submitForm(data?: any) : Promise<void | any> {
         data ||= this.prefs;
-        const provider = this.providers?.filter(p => p.id === data.providerId)[0];
+        const provider = await this.providerFactory.getProvider(data.providerId);
         const model = provider?.models.filter(m => m.id === data.modelId)[0];
         if (provider && model) {
             try {

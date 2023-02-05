@@ -3,6 +3,7 @@ import { PromptWindowPrefs, UserData } from "../UserData";
 import settings from 'electron-settings';
 import path from "path";
 import PromptWindow from "./PromptWindow";
+import { ProviderFactory } from "../providers/ProviderFactory";
 
 class SetupWindow extends BrowserWindow {
     public userData : UserData;
@@ -38,7 +39,7 @@ class SetupWindow extends BrowserWindow {
         const userData = await UserData.load();
     
         const promptWindow = new PromptWindow(
-            userData.providers!,
+            new ProviderFactory(),
             new PromptWindowPrefs({ ...userData.macros[macroIdx], ...userData.mainPromptWindowPrefs.getBounds() }),
             { show: true, modal: true, parent: this, title: `AI Prompt (Macro ${macroIdx})` });
     

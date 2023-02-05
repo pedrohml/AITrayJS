@@ -3,6 +3,7 @@ const path = require('path');
 const PromptWindow = require('./ui-controls/PromptWindow');
 const SetupWindow = require('./ui-controls/SetupWindow');
 const { UserData, PromptWindowPrefs } = require('./UserData');
+const { ProviderFactory } = require('./providers/ProviderFactory');
 
 const appState = { macros: [] };
 
@@ -16,7 +17,7 @@ async function openSetupWindow() {
 const createMainPromptWindow = async (userData) => {
     // Create the browser window.
     const promptWindow = new PromptWindow(
-        userData.providers,
+        new ProviderFactory(),
         { ...userData.mainPromptWindowPrefs, ...{ hideOnClose: true } },
         { show: false });
 
@@ -44,7 +45,7 @@ const executeMacro = async (macroIdx) => {
         appState.macros[macroIdx].close();
 
     const promptWindow = new PromptWindow(
-        userData.providers,
+        new ProviderFactory(),
         { ...userData.macros[macroIdx], ...userData.mainPromptWindowPrefs.getBounds() },
         { show: true, title: `AI Prompt (Macro ${macroIdx})` },
         true);
