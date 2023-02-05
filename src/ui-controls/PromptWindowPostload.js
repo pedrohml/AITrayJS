@@ -55,8 +55,9 @@ const vueApp = new Vue({
         if (this.prompt) {
           this.$refs.loadingOverlay.removeAttribute("hidden");
           const currentData = JSON.parse(JSON.stringify(this.$data));
-          PromptWindowBridge.setPreferences(currentData);
           this.result = await PromptWindowBridge.submitForm(currentData);
+          currentData.result = this.result;
+          PromptWindowBridge.setPreferences(currentData);
           this.$refs.loadingOverlay.setAttribute("hidden", true);
         }
       },
