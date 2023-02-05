@@ -17,20 +17,21 @@ const UserData_1 = require("../UserData");
 const Bounds_1 = require("../Bounds");
 const path_1 = __importDefault(require("path"));
 class PromptWindow extends electron_1.BrowserWindow {
-    constructor(providerFactory, prefs, opts, shouldExecuteOnStartup) {
+    constructor(providerFactory, prefs, opts, shouldExecuteOnStartup, isSaveEnabled) {
         const minWidth = 740;
-        const minHeight = 380;
+        const minHeight = 500;
         const actualWidth = Math.max(prefs.width || 0, minWidth);
         const actualHeight = Math.max(prefs.height || 0, minHeight);
         super(Object.assign({
-            x: prefs.x || null,
-            y: prefs.y || null,
+            x: prefs.x || undefined,
+            y: prefs.y || undefined,
             minWidth: minWidth,
             minHeight: minHeight,
             width: actualWidth,
             height: actualHeight,
             webPreferences: {
-                preload: path_1.default.join(__dirname, '../../src/ui-controls/PromptWindowPreload.js')
+                preload: path_1.default.join(__dirname, '../../src/ui-controls/PromptWindowPreload.js'),
+                devTools: !electron_1.app.isPackaged
             },
             title: 'AI Prompt',
             // resizable: false
@@ -83,6 +84,9 @@ class PromptWindow extends electron_1.BrowserWindow {
         });
         this.webContents.ipc.on('prompt-window-focus', (evt) => {
             this.focus();
+        });
+        this.webContents.ipc.on('is-prompt-save-enabled', (evt) => {
+            evt.returnValue = isSaveEnabled || false;
         });
     }
     adjustBounds() {

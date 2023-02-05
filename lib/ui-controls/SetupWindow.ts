@@ -36,7 +36,7 @@ class SetupWindow extends BrowserWindow {
         const promptWindow = new PromptWindow(
             new ProviderFactory(),
             new PromptWindowPrefs({ ...userData.macros[macroIdx], ...userData.mainPromptWindowPrefs.getBounds() }),
-            { show: true, modal: true, parent: this, title: `AI Prompt (Macro ${macroIdx})` });
+            { show: true, modal: true, parent: this, title: `AI Prompt (Macro ${macroIdx})` }, false, true);
     
         promptWindow.onSavePreferences = async (prefs) => {
             const userData = await UserData.load();

@@ -26,6 +26,9 @@ const PromptWindowBridge = {
     writeUserData(userData) {
         return electron_1.ipcRenderer.invoke('write-userdata', userData);
     },
+    isSaveEnabled() {
+        return electron_1.ipcRenderer.sendSync('is-prompt-save-enabled');
+    },
     getProviders() {
         return __awaiter(this, void 0, void 0, function* () {
             return JSON.parse(yield electron_1.ipcRenderer.invoke('get-providers'));

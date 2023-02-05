@@ -1,4 +1,4 @@
-import { BrowserWindow, BrowserWindowConstructorOptions, screen } from "electron";
+import { app, BrowserWindow, BrowserWindowConstructorOptions, screen } from "electron";
 import { PromptWindowPrefs } from "../UserData";
 import { Bounds } from "../Bounds";
 import path from "path";
@@ -9,25 +9,26 @@ class PromptWindow extends BrowserWindow {
     private prefs: PromptWindowPrefs;
     public onSavePreferences?: (prefs: PromptWindowPrefs) => void | Promise<void>;
 
-    constructor(providerFactory: ProviderFactory, prefs: PromptWindowPrefs, opts: BrowserWindowConstructorOptions, shouldExecuteOnStartup?: boolean) {
+    constructor(providerFactory: ProviderFactory, prefs: PromptWindowPrefs, opts: BrowserWindowConstructorOptions, shouldExecuteOnStartup?: boolean, isSaveEnabled?: boolean) {
         const minWidth = 740;
-        const minHeight = 380;
+        const minHeight = 500;
         const actualWidth = Math.max(prefs.width || 0, minWidth);
         const actualHeight = Math.max(prefs.height || 0, minHeight);
 
-        super(Object.assign({
-            x: prefs.x || null,
-            y: prefs.y || null,
+        super({...{
+            x: prefs.x || undefined,
+            y: prefs.y || undefined,
             minWidth: minWidth,
             minHeight: minHeight,
             width: actualWidth,
             height: actualHeight,
             webPreferences: {
-                preload: path.join(__dirname, '../../src/ui-controls/PromptWindowPreload.js')
+                preload: path.join(__dirname, '../../src/ui-controls/PromptWindowPreload.js'),
+                devTools: !app.isPackaged
             },
             title: 'AI Prompt',
             // resizable: false
-        }, opts));
+        }, ...opts});
 
         this.adjustBounds();
 
@@ -93,6 +94,10 @@ class PromptWindow extends BrowserWindow {
 
         this.webContents.ipc.on('prompt-window-focus', (evt) => {
             this.focus();
+        });
+
+        this.webContents.ipc.on('is-prompt-save-enabled', (evt) => {
+            evt.returnValue = isSaveEnabled || false;
         });
     }
 

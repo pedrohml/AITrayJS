@@ -4,7 +4,7 @@ const vueApp = new Vue({
     const preferences = this.getPreferences();
     
     PromptWindowBridge.setAlwaysOnTop(preferences.isAlwaysOnTop);
-    
+
     return {...{
       providers: undefined, // async populated
       providerId: 'openai',
@@ -13,7 +13,8 @@ const vueApp = new Vue({
       prompt: '',
       result: '',
       clipboardAutoMode: preferences.clipboardAutoMode,
-      isAlwaysOnTop: preferences.isAlwaysOnTop
+      isAlwaysOnTop: preferences.isAlwaysOnTop,
+      isSaveEnabled: PromptWindowBridge.isSaveEnabled(),
     }, ...preferences};
   },
   async mounted() {
@@ -41,7 +42,7 @@ const vueApp = new Vue({
         if (event.ctrlKey && event.key === 'Enter')
           app.submitForm();
         else if (event.key === 'Escape')
-          PromptWindowBridge.closePromptWindow();
+          this.closeWindow();
       });
 
       if (PromptWindowBridge.shouldExecuteOnStartup())
@@ -61,9 +62,11 @@ const vueApp = new Vue({
           this.$refs.loadingOverlay.setAttribute("hidden", true);
         }
       },
+      savePreferences() {
+        PromptWindowBridge.setPreferences(JSON.parse(JSON.stringify(this.$data)));
+      },
       readFromClipboard() {
         return (PromptWindowBridge.readFromClipboard() || '').trim();
-
       },
       getPreferences() {
         const preferences = PromptWindowBridge.getPreferences();
