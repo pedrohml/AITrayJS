@@ -58,7 +58,7 @@ class PromptWindow extends electron_1.BrowserWindow {
             this.prefs.x = bounds.x;
             this.prefs.y = bounds.y;
         });
-        this.webContents.ipc.handle("prompt-form-submit", (event, data) => __awaiter(this, void 0, void 0, function* () {
+        this.webContents.ipc.handle("prompt:submit-form", (event, data) => __awaiter(this, void 0, void 0, function* () {
             return yield this.submitForm(data);
         }));
         this.webContents.ipc.on('prompt:set-always-on-top', (evt, value) => {

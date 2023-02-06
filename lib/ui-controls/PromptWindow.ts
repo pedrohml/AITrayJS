@@ -60,7 +60,7 @@ class PromptWindow extends BrowserWindow {
             this.prefs.y = bounds.y;
         });
 
-        this.webContents.ipc.handle("prompt-form-submit", async (event, data) => {
+        this.webContents.ipc.handle("prompt:submit-form", async (event, data) => {
             return await this.submitForm(data);
         });
 
