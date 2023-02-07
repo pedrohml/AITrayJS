@@ -31,6 +31,7 @@ const vueApp = new Vue({
           app.context = this.readFromClipboard();
           if (PromptWindowBridge.isWindowVisible() && app.context !== this.previousClipboard) {
             PromptWindowBridge.focusWindow();
+            this.$refs.prompt.focus();
           }
           this.previousClipboard = this.context;
         }
