@@ -24,7 +24,7 @@ class PromptWindow extends BrowserWindow {
             height: actualHeight,
             webPreferences: {
                 preload: path.join(__dirname, '../../src/ui-controls/PromptWindowPreload.js'),
-                devTools: !app.isPackaged
+                // devTools: !app.isPackaged
             },
             title: 'AI Prompt',
             // resizable: false
