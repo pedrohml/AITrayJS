@@ -56,10 +56,16 @@ const vueApp = new Vue({
       async submitForm() {
         if (this.prompt) {
           this.$refs.loadingOverlay.removeAttribute("hidden");
-          const currentData = JSON.parse(JSON.stringify(this.$data));
-          this.result = await PromptWindowBridge.submitForm(currentData);
-          currentData.result = this.result;
-          PromptWindowBridge.setPreferences(currentData);
+          this.$refs.form.setAttribute("disabled", true);
+          try {
+            const currentData = JSON.parse(JSON.stringify(this.$data));
+            this.result = await PromptWindowBridge.submitForm(currentData);
+            currentData.result = this.result;
+            PromptWindowBridge.setPreferences(currentData);
+          } catch (err) {
+            this.result = err.message;
+          }
+          this.$refs.form.setAttribute("disabled", false);
           this.$refs.loadingOverlay.setAttribute("hidden", true);
         }
       },

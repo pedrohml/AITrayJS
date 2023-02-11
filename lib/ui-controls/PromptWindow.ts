@@ -109,8 +109,8 @@ class PromptWindow extends BrowserWindow {
 
         if (intersection.width == 0 && intersection.height == 0) {
             const newBounds = {
-                x: (displayBounds.width - bounds.width) / 2,
-                y: (displayBounds.height - bounds.height) / 2,
+                x: Math.floor((displayBounds.width - bounds.width) / 2),
+                y: Math.floor((displayBounds.height - bounds.height) / 2),
                 width: bounds.width,
                 height: bounds.height
             };
