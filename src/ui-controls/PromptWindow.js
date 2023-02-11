@@ -31,7 +31,7 @@ class PromptWindow extends electron_1.BrowserWindow {
             height: actualHeight,
             webPreferences: {
                 preload: path_1.default.join(__dirname, '../../src/ui-controls/PromptWindowPreload.js'),
-                devTools: !electron_1.app.isPackaged
+                // devTools: !app.isPackaged
             },
             title: 'AI Prompt',
             // resizable: false
