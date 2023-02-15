@@ -19,7 +19,7 @@ pool:
 
 # Define a variable for the output directory
 variables:
-  outputDir: '$(System.WorkFolder)\releases'
+  outputDir: '$(System.WorkFolder)/releases/'
 
 # Define a stage for building the app
 stages:
