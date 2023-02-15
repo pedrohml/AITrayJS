@@ -39,17 +39,19 @@ stages:
     - script: npm install
       displayName: 'Install dependencies'
     # Build the app using Electron Forge with the tag name as the version
-    - script: electron-forge make --platform win32 --version $(Build.SourceBranchName)
+    - script: |
+        electron-forge make --platform win32 --version $(Build.SourceBranchName)
+        Get-ChildItem -Recurse out\*zip
       displayName: 'Build app'
     # Copy the output files to the output directory
     - task: CopyFiles@2
       inputs:
-        Contents: out\make\zip\win32\**\*.zip
-        TargetFolder: $(outputDir)
+        Contents: out\make\zip\**\*.zip
+        TargetFolder: '$(outputDir)'
       displayName: 'Copy output files'
     # Publish the output files as an artifact
     - task: PublishPipelineArtifact@1
       inputs:
-        targetPath: $(outputDir)
+        targetPath: '$(outputDir)'
         artifact: 'aitray-app'
       displayName: 'Publish artifact'
