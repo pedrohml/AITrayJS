@@ -41,12 +41,11 @@ stages:
     # Build the app using Electron Forge with the tag name as the version
     - script: |
         electron-forge make --platform win32 --version $(Build.SourceBranchName)
-        copy -Recurse -Verbose out\make\zip\win32\**\*.zip $(outputDir)
-        Get-ChildItem -Recurse $(outputDir)
+        copy -Recurse -Verbose out\make\zip\win32\**\*.zip '$(outputDir)'
       displayName: 'Build app'
     # Publish the output files as an artifact
-    - task: PublishPipelineArtifact@0
-      inputs:
-        targetPath: '$(outputDir)'
-        artifactName: 'release'
+    - task: PublishBuildArtifacts@1
       displayName: 'Publish artifact'
+      inputs:
+        PathtoPublish: '$(outputDir)'
+        artifactName: 'drop'
