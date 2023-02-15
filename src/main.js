@@ -1,5 +1,6 @@
 const { app, ipcMain, clipboard, globalShortcut, Menu, Tray } = require('electron');
 const path = require('path');
+const SplashWindow = require('./ui-controls/SplashWindow');
 const PromptWindow = require('./ui-controls/PromptWindow');
 const SetupWindow = require('./ui-controls/SetupWindow');
 const { UserData, PromptWindowPrefs } = require('./UserData');
@@ -37,6 +38,12 @@ const createMainPromptWindow = async (userData) => {
     return promptWindow;
 }
 
+async function showSplashWindow() {
+    const splashWindow = new SplashWindow();
+
+    return SplashWindow;
+}
+
 const executeMacro = async (macroIdx) => {
     const userData = await UserData.load();
 
@@ -67,6 +74,8 @@ const executeMacro = async (macroIdx) => {
 // initialization and is ready to create browser windows.
 // Algumas APIs podem ser usadas somente depois que este evento ocorre.
 app.whenReady().then(async () => {
+    showSplashWindow();
+
     const userData = await UserData.load();
     const promptWindow = await createMainPromptWindow(userData);
     const tray = new Tray(path.join(__dirname, process.platform === 'win32' ? '../public/images/logo.ico' : '../public/images/logo.png'));

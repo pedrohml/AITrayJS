@@ -246,3 +246,44 @@ button {
     justify-content: flex-end;
     margin: 10px;
 }
+
+.splash-screen {
+    position: relative;
+    background: #F7BA61;
+    display: flex;
+    flex-direction: row;
+    align-content: center;
+    margin: 10px;
+    padding: 0px;
+    flex-wrap: wrap;
+}
+
+.splash-image {
+    position: inherit;
+    background-image: url('../../public/images/logo.png');
+    background-size: 200px 200px;
+    width: 200px;
+    height: 200px;
+    left: -3px;
+}
+
+.splash-content {
+    color: black;
+    display: flex;
+    flex-direction: column;
+}
+
+.splash-title {
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    color: black;
+    font-weight: 900;
+    font-size: 22px;
+    text-align: center;
+    align-self: flex-start;
+}
+
+.splash-text {
+    line-height: 1px;
+    height: 100%;
+    flex-grow: 1;
+}

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <!-- <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'"> -->
+  <link rel="stylesheet" href="./style.css">
+  <title>AI Tray</title>
+</head>
+<body class="splash-screen">
+  <div id="app" class="splash-screen">
+    <div class="splash-image"></div>
+    <div class="splash-content">
+      <span class="splash-title">Clipboard AI</span>
+      <span class="splash-text">
+        <p v-if="isLoaded('user')">Loading user preferences...</p>
+        <p v-if="isLoaded('ui')">Loading UI components...</p>
+        <p v-if="isLoaded('ai')">Loading AI providers...</p>
+        <p v-if="isLoaded('full')">Enjoy !</p>
+      </span>
+    </div>
+  </div>
+</body>
+<script src="../../public/js/vue.prod.js"></script>
+<script src="../ui-controls/SplashWindowPostload.js"></script>
+</html>

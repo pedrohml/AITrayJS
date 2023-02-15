@@ -1,6 +1,5 @@
 import { BrowserWindow } from "electron";
 import { PromptWindowPrefs, UserData } from "../UserData";
-import settings from 'electron-settings';
 import path from "path";
 import PromptWindow from "./PromptWindow";
 import { ProviderFactory } from "../providers/ProviderFactory";

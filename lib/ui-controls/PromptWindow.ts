@@ -1,4 +1,4 @@
-import { app, BrowserWindow, BrowserWindowConstructorOptions, screen } from "electron";
+import { BrowserWindow, BrowserWindowConstructorOptions, screen } from "electron";
 import { PromptWindowPrefs } from "../UserData";
 import { Bounds } from "../Bounds";
 import path from "path";
