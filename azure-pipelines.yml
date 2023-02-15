@@ -19,5 +19,4 @@ steps:
     npm install
     npm run build
     tsc
-    npm run forge-make
   displayName: 'npm install and build'
