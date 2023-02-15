@@ -42,7 +42,7 @@ class PromptWindow extends BrowserWindow {
         this.loadFile(path.join(__dirname, '../../src/layouts/prompt-window.html'));
 
         this.on('close', (event) => {
-            this.setPreferences();
+            this.savePreferences();
             if (prefs.hideOnClose) {
                 event.preventDefault();
                 this.hide();
@@ -78,11 +78,18 @@ class PromptWindow extends BrowserWindow {
         });
 
         this.webContents.ipc.on('prompt:get-preferences', (evt) => {
-            evt.returnValue = JSON.stringify(this.prefs);
+            evt.returnValue = JSON.stringify(this.getPreferences());
         });
 
-        this.webContents.ipc.on('prompt:set-preferences', (evt, prefs) => {
-            this.setPreferences(new PromptWindowPrefs(JSON.parse(prefs)));
+        this.webContents.ipc.handle('prompt:set-preferences', async (evt, prefs) => {
+            this.prefs = new PromptWindowPrefs({...this.prefs, ...JSON.parse(prefs)});
+            this.setPreferences(this.prefs);
+            return JSON.stringify(this.prefs);
+        });
+
+        this.webContents.ipc.handle('prompt:save-preferences', async (evt, prefs) => {
+            await this.savePreferences();
+            return null;
         });
 
         this.webContents.ipc.on('prompt:should-execute-on-startup', (evt) => {
@@ -119,10 +126,18 @@ class PromptWindow extends BrowserWindow {
         }
     }
 
-    public setPreferences(preferences: PromptWindowPrefs | void) {
-        preferences ||= this.prefs;
-        this.prefs = new PromptWindowPrefs({...preferences, ...this.getBounds()});
-        this.onSavePreferences && this.onSavePreferences(this.prefs);
+    public getPreferences() : PromptWindowPrefs {
+        return new PromptWindowPrefs({...this.prefs, ...this.getBounds()});
+    }
+
+    public setPreferences(preferences: PromptWindowPrefs) {
+        this.prefs = preferences;
+    }
+
+    public async savePreferences() {
+        const result = this.onSavePreferences && this.onSavePreferences(this.prefs);
+        if (result instanceof Promise)
+            await result;
     }
 
     private async submitForm(data?: any) : Promise<void | any> {

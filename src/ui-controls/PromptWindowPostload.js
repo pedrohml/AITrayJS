@@ -49,8 +49,9 @@ const vueApp = new Vue({
       if (PromptWindowBridge.shouldExecuteOnStartup())
         this.submitForm();
     },
-    updated() {
+    async updated() {
       PromptWindowBridge.setAlwaysOnTop(!!this.isAlwaysOnTop);
+      await this.setPreferences();
     },
     methods: {
       async submitForm() {
@@ -61,7 +62,7 @@ const vueApp = new Vue({
             const currentData = JSON.parse(JSON.stringify(this.$data));
             this.result = await PromptWindowBridge.submitForm(currentData);
             currentData.result = this.result;
-            this.savePreferences(currentData);
+            await this.savePreferences(currentData);
           } catch (err) {
             this.result = err.message;
           }
@@ -69,8 +70,12 @@ const vueApp = new Vue({
           this.$refs.loadingOverlay.setAttribute("hidden", true);
         }
       },
-      savePreferences(data) {
-        PromptWindowBridge.setPreferences(data);
+      async savePreferences(data) {
+        await PromptWindowBridge.setPreferences(data);
+        await PromptWindowBridge.savePreferences(data);
+      },
+      async setPreferences(data) {
+        await PromptWindowBridge.setPreferences(data || JSON.parse(JSON.stringify(this.$data)));
       },
       readFromClipboard() {
         return (PromptWindowBridge.readFromClipboard() || '').trim();

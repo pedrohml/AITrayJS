@@ -43,6 +43,7 @@ class PromptWindow extends electron_1.BrowserWindow {
         this.setMenuBarVisibility(false);
         this.loadFile(path_1.default.join(__dirname, '../../src/layouts/prompt-window.html'));
         this.on('close', (event) => {
+            this.savePreferences();
             if (prefs.hideOnClose) {
                 event.preventDefault();
                 this.hide();
@@ -71,11 +72,17 @@ class PromptWindow extends electron_1.BrowserWindow {
             return JSON.stringify(yield providerFactory.getAllProviders());
         }));
         this.webContents.ipc.on('prompt:get-preferences', (evt) => {
-            evt.returnValue = JSON.stringify(this.prefs);
+            evt.returnValue = JSON.stringify(this.getPreferences());
         });
-        this.webContents.ipc.on('prompt:set-preferences', (evt, prefs) => {
-            this.setPreferences(new UserData_1.PromptWindowPrefs(JSON.parse(prefs)));
-        });
+        this.webContents.ipc.handle('prompt:set-preferences', (evt, prefs) => __awaiter(this, void 0, void 0, function* () {
+            this.prefs = new UserData_1.PromptWindowPrefs(Object.assign(Object.assign({}, this.prefs), JSON.parse(prefs)));
+            this.setPreferences(this.prefs);
+            return JSON.stringify(this.prefs);
+        }));
+        this.webContents.ipc.handle('prompt:save-preferences', (evt, prefs) => __awaiter(this, void 0, void 0, function* () {
+            yield this.savePreferences();
+            return null;
+        }));
         this.webContents.ipc.on('prompt:should-execute-on-startup', (evt) => {
             evt.returnValue = shouldExecuteOnStartup;
         });
@@ -104,9 +111,18 @@ class PromptWindow extends electron_1.BrowserWindow {
             this.setBounds(newBounds);
         }
     }
+    getPreferences() {
+        return new UserData_1.PromptWindowPrefs(Object.assign(Object.assign({}, this.prefs), this.getBounds()));
+    }
     setPreferences(preferences) {
-        this.prefs = new UserData_1.PromptWindowPrefs(Object.assign(Object.assign({}, preferences), this.getBounds()));
-        this.onSavePreferences && this.onSavePreferences(this.prefs);
+        this.prefs = preferences;
+    }
+    savePreferences() {
+        return __awaiter(this, void 0, void 0, function* () {
+            const result = this.onSavePreferences && this.onSavePreferences(this.prefs);
+            if (result instanceof Promise)
+                yield result;
+        });
     }
     submitForm(data) {
         return __awaiter(this, void 0, void 0, function* () {

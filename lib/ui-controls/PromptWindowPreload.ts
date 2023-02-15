@@ -24,8 +24,11 @@ const PromptWindowBridge = {
   getPreferences() : IProvider[] {
     return JSON.parse(ipcRenderer.sendSync('prompt:get-preferences'));
   },
-  setPreferences(prefs: PromptWindowPrefs) : void {
-    ipcRenderer.send('prompt:set-preferences', JSON.stringify(prefs));
+  setPreferences(prefs: PromptWindowPrefs) : Promise<void> {
+    return ipcRenderer.invoke('prompt:set-preferences', JSON.stringify(prefs));
+  },
+  savePreferences(prefs: PromptWindowPrefs) : Promise<void> {
+    return ipcRenderer.invoke('prompt:save-preferences', JSON.stringify(prefs));
   },
   shouldExecuteOnStartup(): boolean {
     return ipcRenderer.sendSync('prompt:should-execute-on-startup');

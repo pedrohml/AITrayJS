@@ -35,7 +35,10 @@ const PromptWindowBridge = {
         return JSON.parse(electron_1.ipcRenderer.sendSync('prompt:get-preferences'));
     },
     setPreferences(prefs) {
-        electron_1.ipcRenderer.send('prompt:set-preferences', JSON.stringify(prefs));
+        return electron_1.ipcRenderer.invoke('prompt:set-preferences', JSON.stringify(prefs));
+    },
+    savePreferences(prefs) {
+        return electron_1.ipcRenderer.invoke('prompt:save-preferences', JSON.stringify(prefs));
     },
     shouldExecuteOnStartup() {
         return electron_1.ipcRenderer.sendSync('prompt:should-execute-on-startup');
