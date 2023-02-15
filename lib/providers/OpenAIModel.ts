@@ -1,8 +1,8 @@
-import IModel from "./IModel";
-import RequestError from "./RequestError";
-import RequestContext from "./RequestContext";
+import { IModel } from "./IModel";
+import { RequestError } from "./RequestError";
+import { RequestContext } from "./RequestContext";
 
-class OpenAIModel implements IModel {
+export class OpenAIModel implements IModel {
     id: string;
     name: string;
 
@@ -37,6 +37,3 @@ class OpenAIModel implements IModel {
         }
     }
 }
-
-export default OpenAIModel;
-module.exports = OpenAIModel;

@@ -1,6 +1,4 @@
-type Nullable<T> = T | null
-type Predicate<T> = (...params: T[]) => boolean;
-type FuncOut<T> = () => T;
+import { FuncOut, Predicate, Nullable } from "common";
 
 export class Watcher<T> {
     public reader: FuncOut<T>;
@@ -32,6 +30,3 @@ export class Watcher<T> {
         this._intervalPointer = null;
     }
 }
-
-module.exports = Watcher;
-export default Watcher;

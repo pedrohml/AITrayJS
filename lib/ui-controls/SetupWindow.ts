@@ -1,10 +1,10 @@
 import { BrowserWindow } from "electron";
 import { PromptWindowPrefs, UserData } from "../UserData";
-import path from "path";
-import PromptWindow from "./PromptWindow";
+import { PromptWindow } from "./PromptWindow";
 import { ProviderFactory } from "../providers/ProviderFactory";
+import path from "path";
 
-class SetupWindow extends BrowserWindow {
+export class SetupWindow extends BrowserWindow {
     public userData : UserData;
 
     constructor(userData: UserData) {
@@ -39,13 +39,10 @@ class SetupWindow extends BrowserWindow {
     
         promptWindow.onSavePreferences = async (prefs) => {
             const userData = await UserData.load();
-            const bounds = promptWindow.getBounds();
+            const bounds = prefs.getBounds();
             userData.mainPromptWindowPrefs = new PromptWindowPrefs({ ...userData.mainPromptWindowPrefs, ...bounds });
             userData.macros[macroIdx] = prefs;
             await userData.save();
         };
     }
 }
-
-export default SetupWindow;
-module.exports = SetupWindow;

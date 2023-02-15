@@ -1,10 +1,10 @@
-import IProvider from "providers/IProvider";
-import OpenAIProvider from "./providers/OpenAIProvider";
-import settings from 'electron-settings';
-import { safeStorage } from "electron";
+import { IProvider } from "providers/IProvider";
+import { OpenAIProvider } from "./providers/OpenAIProvider";
+import { Rectangle, safeStorage } from "electron";
 import { Bounds } from "./Bounds";
+import settings from 'electron-settings';
 
-export class PromptWindowPrefs extends Bounds {
+export class PromptWindowPrefs {
     public providerId: string;
     public modelId: string;
     public prompt: string;
@@ -13,10 +13,10 @@ export class PromptWindowPrefs extends Bounds {
     public clipboardAutoMode: boolean;
     public isAlwaysOnTop: boolean;
     public hideOnClose: boolean;
+    public bounds: Bounds;
 
     constructor(obj?: any) {
         obj ||= {};
-        super(obj);
         this.providerId = obj.providerId || "";
         this.modelId = obj.modelId || "";
         this.prompt = obj.prompt || "";
@@ -25,10 +25,18 @@ export class PromptWindowPrefs extends Bounds {
         this.clipboardAutoMode = obj.clipboardAutoMode || false;
         this.isAlwaysOnTop = obj.isAlwaysOnTop || false;
         this.hideOnClose = obj.hideOnClose || false;
+        this.bounds = new Bounds(obj.bounds || {});
     }
 
     public getBounds(): Bounds {
-        return new Bounds(this);
+        return this.bounds;
+    }
+
+    public setBounds(bounds: Bounds | Rectangle) {
+        this.bounds.x = bounds.x;
+        this.bounds.y = bounds.y;
+        this.bounds.width = bounds.width;
+        this.bounds.height = bounds.height;
     }
 }
 
@@ -41,10 +49,10 @@ export class UserData {
     constructor(override?: UserData) {
         this.mainPromptWindowPrefs = new PromptWindowPrefs(override?.mainPromptWindowPrefs || {});
         this.openaiAccessKey = override?.openaiAccessKey || '';
-        this.macros = override?.macros || [
+        this.macros = (override?.macros || [
                 {}, {}, {}
-            ]
-            .map(m => ({...new PromptWindowPrefs(), ...m}) as PromptWindowPrefs);
+            ])
+            .map(m => new PromptWindowPrefs({...new PromptWindowPrefs(), ...m}));
     }
     
     public static fromObject(obj: any) : UserData {
@@ -84,8 +92,4 @@ export class UserData {
             new OpenAIProvider(this.openaiAccessKey)
         ];
     }
-
 }
-
-export default { UserData, PromptWindowPrefs };
-module.exports = { UserData, PromptWindowPrefs };

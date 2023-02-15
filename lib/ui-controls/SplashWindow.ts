@@ -1,7 +1,7 @@
 import { BrowserWindow } from "electron";
 import path from "path";
 
-class SplashWindow extends BrowserWindow {
+export class SplashWindow extends BrowserWindow {
     constructor() {
         super({
             width: 400,
@@ -22,6 +22,3 @@ class SplashWindow extends BrowserWindow {
         });
     }
 }
-
-export default SplashWindow;
-module.exports = SplashWindow;

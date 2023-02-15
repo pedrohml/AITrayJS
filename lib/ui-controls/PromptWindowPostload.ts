@@ -34,6 +34,7 @@ const vueApp = new Vue({
           if (PromptWindowBridge.isWindowVisible() && app.context !== this.previousClipboard) {
             PromptWindowBridge.focusWindow();
             this.$refs.prompt.focus();
+            app.forceUpdate();
           }
           this.previousClipboard = this.context;
         }
@@ -115,6 +116,9 @@ const vueApp = new Vue({
           this.context = '';
       },
       contextChanged() {
+      },
+      forceUpdate() {
+        this.$forceUpdate();
       },
       comparePrefs(prevPrefs, newPrefs) {
         if (this.clipboardAutoMode) {

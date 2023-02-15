@@ -1,10 +1,10 @@
 import { BrowserWindow, BrowserWindowConstructorOptions, screen } from "electron";
 import { PromptWindowPrefs } from "../UserData";
 import { Bounds } from "../Bounds";
-import path from "path";
 import { ProviderFactory } from "providers/ProviderFactory";
+import path from "path";
 
-class PromptWindow extends BrowserWindow {
+export class PromptWindow extends BrowserWindow {
     private providerFactory: ProviderFactory;
     private prefs: PromptWindowPrefs;
     public onSavePreferences?: (prefs: PromptWindowPrefs) => void | Promise<void>;
@@ -12,12 +12,12 @@ class PromptWindow extends BrowserWindow {
     constructor(providerFactory: ProviderFactory, prefs: PromptWindowPrefs, opts: BrowserWindowConstructorOptions, shouldExecuteOnStartup?: boolean, isSaveEnabled?: boolean) {
         const minWidth = 740;
         const minHeight = 500;
-        const actualWidth = Math.max(prefs.width || 0, minWidth);
-        const actualHeight = Math.max(prefs.height || 0, minHeight);
+        const actualWidth = Math.max(prefs.bounds?.width || 0, minWidth);
+        const actualHeight = Math.max(prefs.bounds?.height || 0, minHeight);
 
         super({...{
-            x: prefs.x || undefined,
-            y: prefs.y || undefined,
+            x: prefs.bounds?.x || undefined,
+            y: prefs.bounds?.y || undefined,
             minWidth: minWidth,
             minHeight: minHeight,
             width: actualWidth,
@@ -50,15 +50,11 @@ class PromptWindow extends BrowserWindow {
         });
 
         this.on('resized', () => {
-            const bounds = this.getBounds();
-            this.prefs.width = bounds.width;
-            this.prefs.height = bounds.height;
+            this.prefs.setBounds(this.getBounds());
         });
 
         this.on('moved', () => {
-            const bounds = this.getBounds();
-            this.prefs.x = bounds.x;
-            this.prefs.y = bounds.y;
+            this.prefs.setBounds(this.getBounds());
         });
 
         this.webContents.ipc.handle("prompt:submit-form", async (event, data) => {
@@ -123,6 +119,7 @@ class PromptWindow extends BrowserWindow {
                 height: bounds.height
             };
             this.setBounds(newBounds);
+            this.prefs.setBounds(newBounds);
         }
     }
 
@@ -155,6 +152,3 @@ class PromptWindow extends BrowserWindow {
         }
     }
 }
-
-export default PromptWindow;
-module.exports = PromptWindow;

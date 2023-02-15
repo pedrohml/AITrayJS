@@ -1,12 +1,12 @@
 // @ts-nocheck
 
-const { app, ipcMain, clipboard, globalShortcut, Menu, Tray } = require('electron');
-const path = require('path');
-const SplashWindow = require('./ui-controls/SplashWindow');
-const PromptWindow = require('./ui-controls/PromptWindow');
-const SetupWindow = require('./ui-controls/SetupWindow');
-const { UserData, PromptWindowPrefs } = require('./UserData');
-const { ProviderFactory } = require('./providers/ProviderFactory');
+import { app, ipcMain, clipboard, globalShortcut, Menu, Tray } from 'electron';
+import { UserData, PromptWindowPrefs } from './UserData';
+import { ProviderFactory } from './providers/ProviderFactory';
+import { SplashWindow } from './ui-controls/SplashWindow';
+import { PromptWindow } from './ui-controls/PromptWindow';
+import { SetupWindow } from './ui-controls/SetupWindow';
+import path from 'path';
 
 const appState = { macros: [] };
 

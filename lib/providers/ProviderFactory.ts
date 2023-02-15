@@ -1,5 +1,5 @@
 import { UserData } from "../UserData";
-import IProvider from "./IProvider";
+import { IProvider } from "./IProvider";
 
 export class ProviderFactory {
     constructor() {}
@@ -14,6 +14,3 @@ export class ProviderFactory {
         return providers.filter(p => p.id === providerId)[0] || null;
     }
 }
-
-export default { ProviderFactory };
-module.exports = { ProviderFactory };

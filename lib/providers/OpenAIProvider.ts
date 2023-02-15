@@ -1,7 +1,7 @@
 import { OpenAIApi, Configuration, CreateCompletionRequest } from "openai";
-import IProvider from "./IProvider";
-import IModel from "./IModel";
-import OpenAIModel from "./OpenAIModel";
+import { IProvider } from "./IProvider";
+import { IModel } from "./IModel";
+import { OpenAIModel } from "./OpenAIModel";
 
 export class OpenAIProvider implements IProvider {
     public id: string;
@@ -20,19 +20,16 @@ export class OpenAIProvider implements IProvider {
             { id: 'code-davinci-002', name: 'Code Davinci' },
             { id: 'code-cushman-001', name: 'Code Cushman' },
         ].map(m => new OpenAIModel(m.id, m.name));
-        this.client = new OpenAIApi(new Configuration({apiKey: accessKey}));
+        this.client = new OpenAIApi(new Configuration({apiKey: accessKey }));
     }
 
     public async request(model: IModel, prompt: string, context: string | null) : Promise<string> {
         const requestContext = model.buildRequestContext(prompt, context);
         try {
-            const response = await this.client.createCompletion(requestContext.payload as CreateCompletionRequest);
+            const response = await this.client.createCompletion(requestContext.payload as CreateCompletionRequest, { timeout: 30000 });
             return model.processResponse(response);
         } catch (err) {
             return `Failed when prompting [Message=${err}]`;
         }
     }
 }
-
-export default OpenAIProvider;
-module.exports = OpenAIProvider;

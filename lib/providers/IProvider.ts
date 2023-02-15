@@ -1,4 +1,4 @@
-import IModel from "./IModel";
+import { IModel } from "./IModel";
 
 export interface IProvider {
     id: string;
@@ -7,5 +7,3 @@ export interface IProvider {
 
     request(model: IModel, prompt: string, context: string | null) : Promise<any>;
 }
-
-export default IProvider;

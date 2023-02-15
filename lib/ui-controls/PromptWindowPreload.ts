@@ -1,6 +1,6 @@
 import { PromptWindowPrefs, UserData } from "UserData";
 import { contextBridge, ipcRenderer } from "electron";
-import IProvider from "providers/IProvider";
+import { IProvider } from "providers/IProvider";
 
 const PromptWindowBridge = {
   submitForm (formData: any) {
