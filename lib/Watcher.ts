@@ -1,4 +1,4 @@
-import { FuncOut, Predicate, Nullable } from "common";
+import { FuncOut, Predicate, Nullable } from "./common";
 
 export class Watcher<T> {
     public reader: FuncOut<T>;

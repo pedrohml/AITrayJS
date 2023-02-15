@@ -1,8 +1,8 @@
-import IModel from "./IModel";
-import RequestError from "./RequestError";
-import RequestContext from "./RequestContext";
+import { IModel } from "./IModel";
+import { RequestError } from "./RequestError";
+import { RequestContext } from "./RequestContext";
 
-class KiranModel implements IModel {
+export class KiranModel implements IModel {
     id: string;
     name: string;
 
@@ -34,6 +34,3 @@ class KiranModel implements IModel {
         }
     }
 }
-
-export default KiranModel;
-module.exports = KiranModel;
