@@ -1,0 +1,54 @@
+# Node.js
+# Build a general Node.js project with npm.
+# Add steps that analyze code, save build artifacts, deploy, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/languages/javascript
+
+# Trigger the pipeline on any tag
+trigger:
+  tags:
+    include:
+    - '*'
+  # Exclude the master and dev branches
+  branches:
+    exclude:
+    - main
+
+# Use a Windows agent pool
+pool:
+  vmImage: 'windows-latest'
+
+# Define a variable for the output directory
+variables:
+  outputDir: '$(Build.ArtifactStagingDirectory)\out'
+
+# Define a stage for building the app
+stages:
+- stage: Build
+  jobs:
+  - job: Build
+    steps:
+    # Install Node.js
+    - task: NodeTool@0
+      inputs:
+        versionSpec: '18.x'
+      displayName: 'Install Node.js'
+    # Install Electron Forge
+    - script: npm install -g @electron-forge/cli
+      displayName: 'Install Electron Forge'
+    # Install dependencies
+    - script: npm install
+      displayName: 'Install dependencies'
+    # Build the app using Electron Forge with the tag name as the version
+    - script: electron-forge make --platform win32 --version $(Build.SourceBranchName)
+      displayName: 'Build app'
+    # Copy the output files to the output directory
+    - script: |
+        mkdir $(outputDir)
+        copy -Recurse out\make\zip\win32\* $(outputDir)
+      displayName: 'Copy output files'
+    # Publish the output files as an artifact
+    - task: PublishPipelineArtifact@1
+      inputs:
+        targetPath: $(outputDir)
+        artifact: 'aitray-app'
+      displayName: 'Publish artifact'
