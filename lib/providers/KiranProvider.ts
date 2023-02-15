@@ -1,6 +1,6 @@
-import IProvider from "./IProvider";
-import IModel from "./IModel";
-import KiranModel from "./KiranModel";
+import { IProvider } from "./IProvider";
+import { IModel } from "./IModel";
+import { KiranModel } from "./KiranModel";
 import axios from "axios";
 
 export class KiranProvider implements IProvider {
