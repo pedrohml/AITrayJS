@@ -28,7 +28,7 @@ export class KiranModel implements IModel {
 
     processResponse(response: any) : string {
         if (response.status == 200) {
-            return response.data.result.trim();
+            return response.data.choices[0].text.trim();
         } else {
             throw new RequestError(`Failed to request Kiran text completion [StatusCode=${response.status}, Message=${response.data}]`);
         }
