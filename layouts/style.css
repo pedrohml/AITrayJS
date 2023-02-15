@@ -159,7 +159,7 @@ select {
     margin: auto;
     width: 128px;
     height: 128px;
-    background-image: url('../../public/images/loading.gif');
+    background-image: url('../public/images/loading.gif');
     background-size: contain;
 }
 
@@ -260,7 +260,7 @@ button {
 
 .splash-image {
     position: inherit;
-    background-image: url('../../public/images/logo.png');
+    background-image: url('../public/images/logo.png');
     background-size: 200px 200px;
     width: 200px;
     height: 200px;

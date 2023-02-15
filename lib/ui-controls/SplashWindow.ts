@@ -15,7 +15,7 @@ class SplashWindow extends BrowserWindow {
 
         this.setMenuBarVisibility(false);
 
-        this.loadFile(path.join(__dirname, '../../src/layouts/splash-window.html'));
+        this.loadFile(path.join(__dirname, '../../layouts/splash-window.html'));
 
         this.webContents.ipc.on('splash:close', () => {
             this.close();

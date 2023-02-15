@@ -41,7 +41,7 @@ class PromptWindow extends electron_1.BrowserWindow {
         this.providerFactory = providerFactory;
         shouldExecuteOnStartup || (shouldExecuteOnStartup = false);
         this.setMenuBarVisibility(false);
-        this.loadFile(path_1.default.join(__dirname, '../../src/layouts/prompt-window.html'));
+        this.loadFile(path_1.default.join(__dirname, '../../layouts/prompt-window.html'));
         this.on('close', (event) => {
             this.savePreferences();
             if (prefs.hideOnClose) {

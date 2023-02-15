@@ -17,7 +17,7 @@ class SplashWindow extends electron_1.BrowserWindow {
             titleBarStyle: "hidden"
         });
         this.setMenuBarVisibility(false);
-        this.loadFile(path_1.default.join(__dirname, '../../src/layouts/splash-window.html'));
+        this.loadFile(path_1.default.join(__dirname, '../../layouts/splash-window.html'));
         this.webContents.ipc.on('splash:close', () => {
             this.close();
         });

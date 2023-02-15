@@ -21,7 +21,7 @@ class SetupWindow extends BrowserWindow {
 
         this.setMenuBarVisibility(false);
 
-        this.loadFile(path.join(__dirname, '../../src/layouts/setup-window.html'));
+        this.loadFile(path.join(__dirname, '../../layouts/setup-window.html'));
 
         this.webContents.ipc.on('setup:close', (evt) => this.close());
         this.webContents.ipc.on('setup:open-macro', (evt, macroIdx) => {
