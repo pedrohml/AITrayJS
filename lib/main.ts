@@ -56,7 +56,7 @@ const executeMacro = async (macroIdx) => {
     const promptWindow = new PromptWindow(
         new ProviderFactory(),
         { ...userData.macros[macroIdx], ...userData.mainPromptWindowPrefs.getBounds() },
-        { show: true, title: `AI Prompt (Macro ${macroIdx})` },
+        { show: true, title: `AI Prompt (Macro ${macroIdx+1})` },
         true);
 
     promptWindow.onSavePreferences = async (prefs) => {
