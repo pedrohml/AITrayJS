@@ -7,7 +7,7 @@
 trigger:
   tags:
     include:
-    - 'v*'
+    - '*'
   # Exclude the master and dev branches
   branches:
     exclude:
