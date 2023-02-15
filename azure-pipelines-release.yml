@@ -17,10 +17,6 @@ trigger:
 pool:
   vmImage: 'windows-latest'
 
-# Define a variable for the output directory
-variables:
-  outputDir: '$(Agent.BuildDirectory)/releases/'
-
 # Define a stage for building the app
 stages:
 - stage: Build
@@ -40,13 +36,13 @@ stages:
       displayName: 'Install dependencies'
     # Build the app using Electron Forge with the tag name as the version
     - script: |
-        mkdir '$(outputDir)'
         electron-forge make --platform win32 --version $(Build.SourceBranchName)
-        copy -Recurse -Verbose out/make/zip/win32/**/*.zip '$(outputDir)'
+        copy -Recurse -Verbose out/make/zip/win32/**/*.zip '$(Build.ArtifactStagingDirectory)'
       displayName: 'Build app'
     # Publish the output files as an artifact
     - task: PublishBuildArtifacts@1
       displayName: 'Publish artifact'
       inputs:
-        PathtoPublish: '$(outputDir)'
+        PathtoPublish: '$(Build.ArtifactStagingDirectory)'
         artifactName: 'drop'
+        publishLocation: Container
