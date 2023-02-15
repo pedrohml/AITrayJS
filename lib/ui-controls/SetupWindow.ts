@@ -1,10 +1,10 @@
-import { BrowserWindow } from "electron";
 import { PromptWindowPrefs, UserData } from "../UserData";
 import { PromptWindow } from "./PromptWindow";
 import { ProviderFactory } from "../providers/ProviderFactory";
+import { BaseWindow } from "./BaseWindow";
 import path from "path";
 
-export class SetupWindow extends BrowserWindow {
+export class SetupWindow extends BaseWindow {
     public userData : UserData;
 
     constructor(userData: UserData) {
@@ -15,7 +15,8 @@ export class SetupWindow extends BrowserWindow {
                 preload: path.join(__dirname, './SetupWindowPreload.js'),
             },
             resizable: false
-        });
+        },
+        false);
         
         this.userData = userData;
 

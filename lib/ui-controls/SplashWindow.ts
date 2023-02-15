@@ -1,7 +1,7 @@
-import { BrowserWindow } from "electron";
+import { BaseWindow } from "./BaseWindow";
 import path from "path";
 
-export class SplashWindow extends BrowserWindow {
+export class SplashWindow extends BaseWindow {
     constructor() {
         super({
             width: 400,
@@ -11,7 +11,8 @@ export class SplashWindow extends BrowserWindow {
             },
             resizable: false,
             titleBarStyle: "hidden"
-        });
+        },
+        false);
 
         this.setMenuBarVisibility(false);
 

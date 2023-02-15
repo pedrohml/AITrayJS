@@ -1,10 +1,11 @@
-import { BrowserWindow, BrowserWindowConstructorOptions, screen } from "electron";
+import { BrowserWindowConstructorOptions, app, screen } from "electron";
 import { PromptWindowPrefs } from "../UserData";
 import { Bounds } from "../Bounds";
 import { ProviderFactory } from "providers/ProviderFactory";
+import { BaseWindow } from "./BaseWindow";
 import path from "path";
 
-export class PromptWindow extends BrowserWindow {
+export class PromptWindow extends BaseWindow {
     private providerFactory: ProviderFactory;
     private prefs: PromptWindowPrefs;
     public onSavePreferences?: (prefs: PromptWindowPrefs) => void | Promise<void>;
@@ -15,20 +16,23 @@ export class PromptWindow extends BrowserWindow {
         const actualWidth = Math.max(prefs.bounds?.width || 0, minWidth);
         const actualHeight = Math.max(prefs.bounds?.height || 0, minHeight);
 
-        super({...{
-            x: prefs.bounds?.x || undefined,
-            y: prefs.bounds?.y || undefined,
-            minWidth: minWidth,
-            minHeight: minHeight,
-            width: actualWidth,
-            height: actualHeight,
-            webPreferences: {
-                preload: path.join(__dirname, './PromptWindowPreload.js'),
-                // devTools: !app.isPackaged
+        super({
+            ...{
+                x: prefs.bounds?.x || undefined,
+                y: prefs.bounds?.y || undefined,
+                minWidth: minWidth,
+                minHeight: minHeight,
+                width: actualWidth,
+                height: actualHeight,
+                webPreferences: {
+                    preload: path.join(__dirname, './PromptWindowPreload.js'),
+                    devTools: !app.isPackaged
+                },
+                title: 'AI Prompt',
             },
-            title: 'AI Prompt',
-            // resizable: false
-        }, ...opts});
+            ...opts
+            },
+            prefs.hideOnClose);
 
         this.adjustBounds();
 
@@ -43,10 +47,6 @@ export class PromptWindow extends BrowserWindow {
 
         this.on('close', (event) => {
             this.savePreferences();
-            if (prefs.hideOnClose) {
-                event.preventDefault();
-                this.hide();
-            }
         });
 
         this.on('resized', () => {
