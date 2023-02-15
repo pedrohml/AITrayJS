@@ -40,9 +40,14 @@ stages:
       displayName: 'Install dependencies'
     # Build the app using Electron Forge with the tag name as the version
     - script: |
+        mkdir '$(outputDir)'
         electron-forge make --platform win32 --version $(Build.SourceBranchName)
-        copy -Recurse -Verbose out\make\zip\win32\**\*.zip '$(outputDir)'
+        copy -Recurse -Verbose out/make/zip/win32/**/*.zip '$(outputDir)'
       displayName: 'Build app'
+- stage: Publish
+  jobs:
+  - job: Publish
+    steps:
     # Publish the output files as an artifact
     - task: PublishBuildArtifacts@1
       displayName: 'Publish artifact'
