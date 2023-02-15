@@ -8,7 +8,7 @@
 <body>
   <div id="app">
     <div id="loading-overlay" ref="loadingOverlay" class="loading-overlay" hidden></div>
-    <form id="form" @submit.prevent="submitForm">
+    <form id="form" ref="form" @submit.prevent="submitForm">
       <fieldset>
         <div class="hstack">
           <div class="field horizontal">
