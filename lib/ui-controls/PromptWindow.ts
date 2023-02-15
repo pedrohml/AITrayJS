@@ -42,6 +42,7 @@ class PromptWindow extends BrowserWindow {
         this.loadFile(path.join(__dirname, '../../src/layouts/prompt-window.html'));
 
         this.on('close', (event) => {
+            this.setPreferences();
             if (prefs.hideOnClose) {
                 event.preventDefault();
                 this.hide();
@@ -118,7 +119,8 @@ class PromptWindow extends BrowserWindow {
         }
     }
 
-    public setPreferences(preferences: PromptWindowPrefs) {
+    public setPreferences(preferences: PromptWindowPrefs | void) {
+        preferences ||= this.prefs;
         this.prefs = new PromptWindowPrefs({...preferences, ...this.getBounds()});
         this.onSavePreferences && this.onSavePreferences(this.prefs);
     }

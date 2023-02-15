@@ -61,7 +61,7 @@ const vueApp = new Vue({
             const currentData = JSON.parse(JSON.stringify(this.$data));
             this.result = await PromptWindowBridge.submitForm(currentData);
             currentData.result = this.result;
-            PromptWindowBridge.setPreferences(currentData);
+            this.savePreferences(currentData);
           } catch (err) {
             this.result = err.message;
           }
@@ -69,8 +69,8 @@ const vueApp = new Vue({
           this.$refs.loadingOverlay.setAttribute("hidden", true);
         }
       },
-      savePreferences() {
-        PromptWindowBridge.setPreferences(JSON.parse(JSON.stringify(this.$data)));
+      savePreferences(data) {
+        PromptWindowBridge.setPreferences(data);
       },
       readFromClipboard() {
         return (PromptWindowBridge.readFromClipboard() || '').trim();
