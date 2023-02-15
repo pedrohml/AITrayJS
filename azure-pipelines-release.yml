@@ -8,10 +8,10 @@ trigger:
   tags:
     include:
     - '*'
-  # Exclude the master and dev branches
+  # Exclude all branches branches
   branches:
     exclude:
-    - main
+    - '*'
 
 # Use a Windows agent pool
 pool:
