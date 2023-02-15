@@ -15,7 +15,7 @@ Working on the OS tray:
 - **CTRL+ALT+9** Execute macro 2
 - **CTRL+ALT+0** Execute macro 3
 
-## Show macro works
+## How macro works
 
 Configuring:
 1. Configure the chosen macro in the setup menu
