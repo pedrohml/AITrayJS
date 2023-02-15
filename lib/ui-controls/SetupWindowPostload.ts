@@ -4,6 +4,7 @@ const vueApp = new Vue({
   el: '#app',
   data() {
     return {
+      kiranAccessKey: '',
       openaiAccessKey: '',
       macros: [],
     };
@@ -14,19 +15,30 @@ const vueApp = new Vue({
         SetupWindowBridge.closeSetupWindow();
     });
 
-    const userData = await SetupWindowBridge.readUserData();
-    this.openaiAccessKey = userData.openaiAccessKey;
-    this.macros = userData.macros;
+    const userData = await this.getUserData();
+    this.fillFromUserData(userData);
   },
   async updated() {
-    const userData = await SetupWindowBridge.readUserData();
-    userData.openaiAccessKey = this.openaiAccessKey;
-    userData.macros = this.macros;
-    await SetupWindowBridge.writeUserData(userData);
+    this.writeToUserData();
   },
   methods: {
     openMacro(idx) {
       SetupWindowBridge.openMacro(idx);
+    },
+    async getUserData() {
+      return await SetupWindowBridge.readUserData() || {};
+    },
+    fillFromUserData(userData) {
+      this.openaiAccessKey = userData.openaiAccessKey;
+      this.kiranAccessKey = userData.kiranAccessKey;
+      this.macros = userData.macros;
+    },
+    async writeToUserData(data) {
+      const userData = await this.getUserData() || {};
+      userData.openaiAccessKey = this.openaiAccessKey;
+      userData.kiranAccessKey = this.kiranAccessKey;
+      userData.macros = this.macros;
+      await SetupWindowBridge.writeUserData(userData);
     }
   }
 });

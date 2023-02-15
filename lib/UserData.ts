@@ -1,5 +1,6 @@
 import { IProvider } from "providers/IProvider";
 import { OpenAIProvider } from "./providers/OpenAIProvider";
+import { KiranProvider } from "./providers/KiranProvider";
 import { Rectangle, safeStorage } from "electron";
 import { Bounds } from "./Bounds";
 import settings from 'electron-settings';
@@ -44,11 +45,13 @@ export class UserData {
     public mainPromptWindowPrefs: PromptWindowPrefs;
     public providers?: IProvider[];
     public openaiAccessKey: string;
+    public kiranAccessKey: string;
     public macros: PromptWindowPrefs[];
 
     constructor(override?: UserData) {
         this.mainPromptWindowPrefs = new PromptWindowPrefs(override?.mainPromptWindowPrefs || {});
         this.openaiAccessKey = override?.openaiAccessKey || '';
+        this.kiranAccessKey = override?.kiranAccessKey || '';
         this.macros = (override?.macros || [
                 {}, {}, {}
             ])
@@ -89,7 +92,8 @@ export class UserData {
 
     private loadProviders() : void {
         this.providers = [
-            new OpenAIProvider(this.openaiAccessKey)
+            new OpenAIProvider(this.openaiAccessKey),
+            new KiranProvider(this.kiranAccessKey),
         ];
     }
 }

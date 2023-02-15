@@ -29,7 +29,7 @@ export class OpenAIProvider implements IProvider {
             const response = await this.client.createCompletion(requestContext.payload as CreateCompletionRequest, { timeout: 30000 });
             return model.processResponse(response);
         } catch (err) {
-            return `Failed when prompting [Message=${err}]`;
+            return `ERROR [Message=${err}]`;
         }
     }
 }

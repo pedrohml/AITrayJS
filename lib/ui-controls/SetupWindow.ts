@@ -10,7 +10,7 @@ export class SetupWindow extends BaseWindow {
     constructor(userData: UserData) {
         super({
             width: 650,
-            height: 250,
+            height: 300,
             webPreferences: {
                 preload: path.join(__dirname, './SetupWindowPreload.js'),
             },
