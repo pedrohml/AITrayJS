@@ -45,8 +45,8 @@ stages:
         Get-ChildItem -Recurse $(outputDir)
       displayName: 'Build app'
     # Publish the output files as an artifact
-    - task: PublishPipelineArtifact@1
+    - task: PublishPipelineArtifact@0
       inputs:
         targetPath: '$(outputDir)'
-        artifact: 'aitray-app'
+        artifactName: 'release'
       displayName: 'Publish artifact'
