@@ -35,10 +35,11 @@ stages:
     - script: npm install
       displayName: 'Install dependencies'
     # Build the app using Electron Forge with the tag name as the version
-    - script: |
-        electron-forge make --platform win32 --version $(Build.SourceBranchName)
-        copy -Recurse -Verbose out/make/zip/win32/**/*.zip '$(Build.ArtifactStagingDirectory)'
-      displayName: 'Build app'
+    - script: electron-forge make --platform win32 --version $(Build.SourceBranchName)
+      displayName: 'Packaging'
+    # Copy artifacts to target folder
+    - script: copy -Recurse -Verbose out/make/zip/win32/**/*.zip '$(Build.ArtifactStagingDirectory)'
+      displayName: 'Copying to target folder'
     # Publish the output files as an artifact
     - task: PublishBuildArtifacts@1
       displayName: 'Publish artifact'
