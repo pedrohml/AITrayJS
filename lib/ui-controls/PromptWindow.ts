@@ -34,9 +34,8 @@ export class PromptWindow extends BaseWindow {
             },
             prefs.hideOnClose);
 
-        this.adjustBounds();
-
         this.prefs = new PromptWindowPrefs(prefs);
+
         this.providerFactory = providerFactory;
 
         shouldExecuteOnStartup ||= false;
@@ -44,6 +43,8 @@ export class PromptWindow extends BaseWindow {
         this.setMenuBarVisibility(false);
 
         this.loadFile(path.join(__dirname, '../../layouts/prompt-window.html'));
+
+        this.adjustBounds();
 
         this.on('close', (event) => {
             this.savePreferences();
@@ -109,9 +110,9 @@ export class PromptWindow extends BaseWindow {
         const bounds = new Bounds(this.getBounds());
         const display = screen.getDisplayMatching(bounds);
         const displayBounds = new Bounds(display.workArea);
-        const intersection = bounds.interseect(displayBounds);
+        const intersection = bounds.intersect(displayBounds);
 
-        if (intersection.width == 0 && intersection.height == 0) {
+        if (!bounds.isEquals(intersection)) {
             const newBounds = {
                 x: Math.floor((displayBounds.width - bounds.width) / 2),
                 y: Math.floor((displayBounds.height - bounds.height) / 2),

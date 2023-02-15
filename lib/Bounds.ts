@@ -12,7 +12,7 @@ export class Bounds {
         this.height = obj.height || 0;
     }
 
-    public interseect(otherBounds: Bounds) : Bounds {
+    public intersect(otherBounds: Bounds) : Bounds {
         let left = Math.max(this.x, otherBounds.x);
         let right = Math.min(this.x + this.width, otherBounds.x + otherBounds.width);
         let top = Math.max(this.y, otherBounds.y);
@@ -23,4 +23,8 @@ export class Bounds {
         else
             return new Bounds();
     };
+
+    public isEquals(otherBounds: Bounds): boolean {
+        return this.x == otherBounds.x && this.y == otherBounds.y && this.width == otherBounds.width && this.height == otherBounds.height;
+    }
 }
