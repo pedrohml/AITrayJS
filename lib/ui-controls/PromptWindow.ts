@@ -10,7 +10,7 @@ export class PromptWindow extends BaseWindow {
     private prefs: PromptWindowPrefs;
     public onSavePreferences?: (prefs: PromptWindowPrefs) => void | Promise<void>;
 
-    constructor(providerFactory: ProviderFactory, prefs: PromptWindowPrefs, opts: BrowserWindowConstructorOptions, shouldExecuteOnStartup?: boolean, isSaveEnabled?: boolean) {
+    constructor(providerFactory: ProviderFactory, prefs: PromptWindowPrefs, opts: BrowserWindowConstructorOptions, shouldExecuteOnStartup?: boolean) {
         const minWidth = 740;
         const minHeight = 500;
         const actualWidth = Math.max(prefs.bounds?.width || 0, minWidth);
@@ -101,7 +101,7 @@ export class PromptWindow extends BaseWindow {
         });
 
         this.webContents.ipc.on('prompt:is-save-enabled', (evt) => {
-            evt.returnValue = isSaveEnabled || false;
+            evt.returnValue = false;
         });
     }
 
