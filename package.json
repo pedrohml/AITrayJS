@@ -1,7 +1,7 @@
 {
   "name": "aitray",
   "version": "1.0.0",
-  "description": "An app to apply AI model over clipboard history",
+  "description": "An app to retrieve fast AI insights over the clipboard history",
   "main": "build/main.js",
   "author": "Pedro Lira",
   "license": "MIT",
