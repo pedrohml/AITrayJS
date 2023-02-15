@@ -7,7 +7,7 @@ class SplashWindow extends BrowserWindow {
             width: 400,
             height: 245,
             webPreferences: {
-                preload: path.join(__dirname, '../../src/ui-controls/SplashWindowPreload.js'),
+                preload: path.join(__dirname, './SplashWindowPreload.js'),
             },
             resizable: false,
             titleBarStyle: "hidden"

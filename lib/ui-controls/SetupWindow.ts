@@ -12,7 +12,7 @@ class SetupWindow extends BrowserWindow {
             width: 650,
             height: 250,
             webPreferences: {
-                preload: path.join(__dirname, '../../src/ui-controls/SetupWindowPreload.js'),
+                preload: path.join(__dirname, './SetupWindowPreload.js'),
             },
             resizable: false
         });

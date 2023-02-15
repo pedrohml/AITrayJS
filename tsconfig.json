@@ -5,7 +5,7 @@
       "strict": true,
       "esModuleInterop": true,
       "baseUrl": "./lib",
-      "outDir": "./src"
+      "outDir": "./build"
     },
     "include": [
       "./lib/**/*.ts"

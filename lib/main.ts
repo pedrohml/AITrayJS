@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 const { app, ipcMain, clipboard, globalShortcut, Menu, Tray } = require('electron');
 const path = require('path');
 const SplashWindow = require('./ui-controls/SplashWindow');
