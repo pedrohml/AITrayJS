@@ -15,6 +15,10 @@
           <label for="openai-access-key" class="large">OpenAI Access Key:</label>
           <input id="openai-access-key" ref="openaiAccessKey" type="text" v-model="openaiAccessKey"/>
         </div>
+        <div class="field horizontal">
+          <label for="kiran-access-key" class="large">Kiran Access Key:</label>
+          <input id="kiran-access-key" ref="kiranAccessKey" type="text" v-model="kiranAccessKey"/>
+        </div>
         <p><b>Macros</b></p>
         <div class="hstack evenly">
           <button type="button" v-for="(macro, idx) in macros" :key="idx" @click="openMacro(idx)">Macro {{idx + 1}}</button>
