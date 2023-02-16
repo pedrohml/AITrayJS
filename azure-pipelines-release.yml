@@ -29,22 +29,19 @@ stages:
         versionSpec: '18.x'
       displayName: 'Install Node.js'
     # Install Electron Forge
-    - script: npm install -g @electron-forge/cli
+    - script: npm install -g @electron-forge/cli @electron-forge/maker-zip
       displayName: 'Install Electron Forge'
     # Install dependencies
     - script: npm install
       displayName: 'Install dependencies'
     # Build the app using Electron Forge with the tag name as the version
-    - script: |
-        echo '*** $(Build.SourceBranchName) ***'
-        ls .
-        electron-forge make --platform win32 --version $(Build.SourceBranchName)
-        Get-ChildItem -Recurse out/
+    - script: electron-forge make --platform win32 --version $(Build.SourceBranchName)
       displayName: 'Packaging'
     - task: CopyFiles@2
       displayName: 'Copying to target folder'
       inputs:
-       SourceFolder: out/
+       SourceFolder: out/make/zip/win32/
+       Contents: '**/*.zip'
        TargetFolder: '$(Build.ArtifactStagingDirectory)'
     # Publish the output files as an artifact
     - task: PublishBuildArtifacts@1
