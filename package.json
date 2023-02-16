@@ -26,6 +26,7 @@
     "tsconfig.json",
     ".eslintrc.yml"
   ],
+  "keywords": ["app", "cross-platform", "clipboard", "ai"],
   "scripts": {
     "start": "electron build/main.js",
     "build": "tsc",
