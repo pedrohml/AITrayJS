@@ -1,6 +1,6 @@
 ## ![](./public/images/logo16x16.png) AI Tray
 
-An app to retrieve fast AI insights over the clipboard history
+A cross-platform app running in background to help users with fast AI insights over the clipboard history
 
 ![](./public/images/aitray-prompt.gif)
 

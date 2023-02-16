@@ -1,22 +1,38 @@
 {
   "name": "aitray",
   "version": "1.0.0",
-  "description": "An app to retrieve fast AI insights over the clipboard history",
+  "description": "A cross-platform app running in background to help users with fast AI insights over the clipboard history",
   "main": "build/main.js",
   "author": "Pedro Lira",
   "license": "MIT",
+  "readme": "README.md",
+  "icon": "public/images/logo128x128.png",
+  "repository": {
+    "url": "https://github.com/pedrohml/aitrayjs"
+  },
   "dependencies": {
     "electron": "^22.2.0",
     "electron-settings": "^4.0.2",
     "openai": "^3.1.0",
     "typescript": "^4.9.4"
   },
+  "files": [
+    "layouts/",
+    "lib/",
+    "public/",
+    "LICENSE",
+    "README.md",
+    "package.json",
+    "tsconfig.json",
+    ".eslintrc.yml"
+  ],
   "scripts": {
     "start": "electron build/main.js",
     "build": "tsc",
     "forge-start": "electron-forge start",
     "forge-package": "electron-forge package",
-    "forge-make": "electron-forge make"
+    "forge-make": "electron-forge make",
+    "postinstall": "npm run build"
   },
   "devDependencies": {
     "@electron-forge/cli": "^6.0.4",
