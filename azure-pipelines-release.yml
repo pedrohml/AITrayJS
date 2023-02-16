@@ -35,7 +35,7 @@ stages:
     - script: npm install
       displayName: 'Install dependencies'
     # Build the app using Electron Forge with the tag name as the version
-    - script: electron-forge make --platform win32 --version $(Build.SourceBranchName)
+    - script: npm run forge-make
       displayName: 'Packaging'
     - task: CopyFiles@2
       displayName: 'Copying to target folder'
