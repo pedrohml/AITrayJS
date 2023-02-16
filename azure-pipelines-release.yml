@@ -34,6 +34,9 @@ stages:
     # Install dependencies
     - script: npm install
       displayName: 'Install dependencies'
+    # Build project
+    - script: npm run build
+      displayName: 'Build project'
     # Build the app using Electron Forge with the tag name as the version
     - script: npm run forge-make
       displayName: 'Packaging'
