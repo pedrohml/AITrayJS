@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 // @ts-nocheck
 
 import { app, ipcMain, clipboard, globalShortcut, Menu, Tray } from 'electron';
