@@ -8,18 +8,14 @@ trigger:
   tags:
     include:
     - '*'
-  # Exclude the master and dev branches
+  # Exclude all branches branches
   branches:
     exclude:
-    - main
+    - '*'
 
 # Use a Windows agent pool
 pool:
   vmImage: 'windows-latest'
-
-# Define a variable for the output directory
-variables:
-  outputDir: '$(Build.ArtifactStagingDirectory)\out'
 
 # Define a stage for building the app
 stages:
@@ -33,19 +29,27 @@ stages:
         versionSpec: '18.x'
       displayName: 'Install Node.js'
     # Install Electron Forge
-    - script: npm install -g @electron-forge/cli
+    - script: npm install -g @electron-forge/cli @electron-forge/maker-zip
       displayName: 'Install Electron Forge'
     # Install dependencies
     - script: npm install
       displayName: 'Install dependencies'
+    # Build project
+    - script: npm run build
+      displayName: 'Build project'
     # Build the app using Electron Forge with the tag name as the version
-    - script: |
-        electron-forge make --platform win32 --version $(Build.SourceBranchName)
-        copy -Recurse out/make/zip/win32/* $(outputDir)
-      displayName: 'Build app'
-    # Publish the output files as an artifact
-    - task: PublishPipelineArtifact@1
+    - script: npm run forge-make
+      displayName: 'Packaging'
+    - task: CopyFiles@2
+      displayName: 'Copying to target folder'
       inputs:
-        targetPath: '$(outputDir)'
-        artifact: 'aitray-app'
+       SourceFolder: out/make/zip/win32/
+       Contents: '**/*.zip'
+       TargetFolder: '$(Build.ArtifactStagingDirectory)'
+    # Publish the output files as an artifact
+    - task: PublishBuildArtifacts@1
       displayName: 'Publish artifact'
+      inputs:
+        PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+        artifactName: 'drop'
+        publishLocation: Container
