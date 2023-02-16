@@ -38,8 +38,13 @@ stages:
     - script: electron-forge make --platform win32 --version $(Build.SourceBranchName)
       displayName: 'Packaging'
     # Copy artifacts to target folder
-    - script: copy -Recurse -Verbose out/make/zip/win32/**/*.zip '$(Build.ArtifactStagingDirectory)'
+    # - script: copy -Recurse -Verbose out/make/zip/win32/**/*.zip '$(Build.ArtifactStagingDirectory)'
+    #   displayName: 'Copying to target folder'
+    - task: CopyFiles@2
       displayName: 'Copying to target folder'
+      inputs:
+       SourceFolder: out/
+       TargetFolder: '$(Build.ArtifactStagingDirectory)'
     # Publish the output files as an artifact
     - task: PublishBuildArtifacts@1
       displayName: 'Publish artifact'
