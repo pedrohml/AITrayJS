@@ -1,7 +1,8 @@
-import { OpenAIApi, Configuration, CreateCompletionRequest } from "openai";
+import { OpenAIApi, Configuration, CreateCompletionRequest, CreateChatCompletionRequest } from "openai";
 import { IProvider } from "./IProvider";
 import { IModel } from "./IModel";
-import { OpenAIModel } from "./OpenAIModel";
+import { OpenAITextModel } from "./OpenAITextModel";
+import { OpenAIChatModel } from "./OpenAIChatModel";
 
 export class OpenAIProvider implements IProvider {
     public id: string;
@@ -12,22 +13,23 @@ export class OpenAIProvider implements IProvider {
     constructor(accessKey: string) {
         this.id = 'openai';
         this.name = 'OpenAI';
-        this.models = [
-            { id: 'text-davinci-003', name: 'Text Davinci' },
-            { id: 'text-curie-001', name: 'Text Curie' },
-            { id: 'text-babbage-001', name: 'Text Babbage' },
-            { id: 'text-ada-001', name: 'Text Ada' },
-            { id: 'code-davinci-002', name: 'Code Davinci' },
-            { id: 'code-cushman-001', name: 'Code Cushman' },
-        ].map(m => new OpenAIModel(m.id, m.name));
         this.client = new OpenAIApi(new Configuration({apiKey: accessKey }));
+        this.models = [
+            { id: 'gpt-4', name: 'GPT 4', type: 'chat' },
+            { id: 'gpt-3.5-turbo', name: 'GPT 3.5', type: 'chat' },
+
+            { id: 'text-davinci-003', name: 'Text Davinci', type: 'text' },
+            { id: 'text-curie-001', name: 'Text Curie', type: 'text' },
+            { id: 'text-babbage-001', name: 'Text Babbage', type: 'text' },
+            { id: 'text-ada-001', name: 'Text Ada', type: 'text' },
+            { id: 'code-davinci-002', name: 'Code Davinci', type: 'text' },
+            { id: 'code-cushman-001', name: 'Code Cushman', type: 'text' },
+        ].map(m => m.type === 'text' ? new OpenAITextModel(this.client, m.id, m.name) : new OpenAIChatModel(this.client, m.id, m.name));
     }
 
     public async request(model: IModel, prompt: string, context: string | null) : Promise<string> {
-        const requestContext = model.buildRequestContext(prompt, context);
         try {
-            const response = await this.client.createCompletion(requestContext.payload as CreateCompletionRequest, { timeout: 30000 });
-            return model.processResponse(response);
+            return await model.request(prompt, context);
         } catch (err) {
             return `Failed when prompting [Message=${err}]`;
         }
