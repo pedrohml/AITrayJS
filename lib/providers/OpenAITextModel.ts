@@ -26,7 +26,7 @@ export class OpenAITextModel implements IModel {
             model: this.id,
             prompt: enhancedPrompt,
             temperature: 0.5,
-            max_tokens: 250,
+            max_tokens: 500,
             top_p: 0.1,
             frequency_penalty: 1,
             presence_penalty: 1

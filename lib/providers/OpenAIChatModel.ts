@@ -19,10 +19,11 @@ export class OpenAIChatModel implements IModel {
         return {
             model: this.id,
             messages: [
-                {"role": "system", "content": `As a helpful assistant, your role is to give the most straight forward answer to: ${prompt}`},
-                {"role": "user", "content": context}],
+                {"role": "system", "content": `You are a smart assistant. Execute the command: ${prompt}`},
+                {"role": "user", "content": context}
+            ],
             temperature: 0.3,
-            max_tokens: 250,
+            max_tokens: 500,
             top_p: 0.1,
             frequency_penalty: 1,
             presence_penalty: 1
